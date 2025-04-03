@@ -1,11 +1,50 @@
-import React from 'react'
+import React, { useContext } from "react";
+import { Routes,Route } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import { AppContext } from "./context/AppContext";
+import Search from "./components/Search";
+import Notifications from "./components/Notifications";
+import Menu from "./components/Menu";
+import Send from "./components/Send";
+import Home from "./pages/Home";
+import Explore from "./pages/Explore";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
+import Followers from "./components/Followers";
+import Following from "./components/Following";
+import Comment from "./components/Comment";
+import UserUploadedPosts from "./components/UserUploadedPosts";
+import UserSavedPosts from "./components/UserSavedPosts";
 
 const App = () => {
-  return (
-    <div>
-      re
-    </div>
-  )
-}
+  const { showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts } = useContext(AppContext);
 
-export default App
+  return (
+    <div className="flex">
+      <Sidebar />
+
+      <div className="flex-1 ml-[250px] max-sm:ml-[70px]">
+        {showSearch && <Search />}
+        {showNotifications && <Notifications />}
+        {showMenu && <Menu />}
+        {showSend && <Send/>}
+        {showFollowers && <Followers/>}
+        {showFollowing && <Following/>}
+        {showComment && <Comment/>}
+        {showUserUploadedPosts && <UserUploadedPosts/>}
+        {showUserSavedPosts && <UserSavedPosts/>}
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/:username" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+
+      </div>
+    </div>
+  );
+};
+
+export default App;

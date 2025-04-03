@@ -2,8 +2,8 @@ import React from 'react'
 
 const Explore = () => {
   return (
-    <div>
-      
+    <div className='text-white'>
+      Explore
     </div>
   )
 }
