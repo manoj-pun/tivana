@@ -18,6 +18,9 @@ const postSchema = mongoose.Schema({
             type: String,
             required: true
         },
+        subTitle: {
+            type: String,
+        },
         dropdownImages:[{
             type: String,
             required: true
