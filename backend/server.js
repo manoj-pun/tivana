@@ -1,13 +1,15 @@
-// server.js
-
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
-import { schema } from './graphql/schema.js';  // Import the final schema
+import { schema } from './graphql/schema.js';  
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
 
 async function startServer() {
   const app = express();
+
+  dotenv.config();
   
   // Set up Apollo Server
   const server = new ApolloServer({
@@ -16,6 +18,8 @@ async function startServer() {
   });
 
   await server.start();
+
+  await connectDB();
 
   // Apply CORS middleware before express.json()
   app.use(cors());
@@ -26,8 +30,7 @@ async function startServer() {
   // Apollo Server middleware to handle GraphQL requests
   app.use('/graphql', expressMiddleware(server, {
     context: async ({ req, res }) => {
-      const token = req.headers.authorization || '';  // Token or other context info
-      return { req, res, token };
+      return { req, res };
     },
   }));
 
