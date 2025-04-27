@@ -1,1 +1,35 @@
-import m
+import mongoose from "mongoose";
+
+const postSchema = mongoose.Schema({
+    userId:{
+        type: String,
+        required: true
+    },
+    thumbnail: {
+        type: String,
+        required:true
+    },
+    description:{
+        type: String,
+        required: true
+    },
+    dropdowns:[{
+        title: {
+            type: String,
+            required: true
+        },
+        dropdownImages:[{
+            type: String,
+            required: true
+        }],
+        description: {
+            type: String,
+            required: true
+        }
+    }]
+    }
+);
+
+const Post = mongoose.model("Post", postSchema);
+
+export default Post
