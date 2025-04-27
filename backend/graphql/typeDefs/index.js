@@ -1,7 +1,5 @@
-// /graphql/typeDefs/index.js
-
-import { bookTypeDef } from './bookTypeDef.js';
+import postTypeDefs from "./postTypeDef.js";
 
 export const typeDefs = [
-  bookTypeDef,  // Merge the book type definitions
+  postTypeDefs
 ];

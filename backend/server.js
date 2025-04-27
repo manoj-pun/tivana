@@ -2,7 +2,7 @@ import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
-import { schema } from './graphql/schema.js';  
+import { typeDefs, resolvers } from './graphql/schema.js';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
@@ -13,8 +13,8 @@ async function startServer() {
   
   // Set up Apollo Server
   const server = new ApolloServer({
-    typeDefs: schema.typeDefs,
-    resolvers: schema.resolvers,
+    typeDefs,
+    resolvers
   });
 
   await server.start();
@@ -35,8 +35,9 @@ async function startServer() {
   }));
 
   // Start the server
-  app.listen(4000, () => {
-    console.log('🚀 Server ready at http://localhost:4000/graphql');
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
   });
 }
 

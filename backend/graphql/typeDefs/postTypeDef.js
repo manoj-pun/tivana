@@ -1,19 +1,20 @@
-import gql from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
-export const typeDefs = gql`
+const postTypeDefs = gql`
+
+  type Post {
+    _id: ID!
+    userId: ID!
+    thumbnail: String!
+    description: String!
+    dropdowns: [Dropdown!]!
+  }
+
   type Dropdown {
     title: String!
     subTitle: String
     dropdownImages: [String!]!
     description: String!
-  }
-
-  type Post {
-    _id: ID!
-    userId: String!
-    thumbnail: String!
-    description: String!
-    dropdowns: [Dropdown!]!
   }
 
   type Query {
@@ -30,12 +31,20 @@ export const typeDefs = gql`
     ): Post!
   }
 
+  input PostInput {
+    userId: String!
+    thumbnail: String!
+    description: String!
+    dropdowns: [DropdownInput!]!
+  }
+
   input DropdownInput {
     title: String!
     subTitle: String
     dropdownImages: [String!]!
     description: String!
   }
+
 `;
 
-export default typeDefs;
+export default postTypeDefs;

@@ -1,6 +1,6 @@
-import Post from '../models/Post.js'; // adjust the path based on your structure
+import Post from "../../models/postModel.js";
 
-export const postResolvers = {
+const postResolvers = {
   Query: {
     posts: async () => {
       try {
@@ -24,15 +24,9 @@ export const postResolvers = {
   },
 
   Mutation: {
-    createPost: async (_, { userId, thumbnail, description, dropdowns }) => {
+    createPost: async(_, {input}) => {
       try {
-        const newPost = new Post({
-          userId,
-          thumbnail,
-          description,
-          dropdowns
-        });
-
+        const newPost = new Post(input);
         const savedPost = await newPost.save();
         return savedPost;
       } catch (error) {

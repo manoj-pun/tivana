@@ -1,9 +1,11 @@
-// /graphql/resolvers/index.js
-
-import { bookResolver } from './bookResolver.js';
+import postResolvers from "./postResolver.js";
 
 export const resolvers = {
   Query: {
-    ...bookResolver.Query,  // Merge the book query resolvers
+    ...postResolvers.Query
   },
+
+  Mutation:{
+    ...postResolvers.Mutation
+  }
 };
