@@ -23,12 +23,7 @@ const postTypeDefs = gql`
   }
 
   type Mutation {
-    createPost(
-      userId: String!
-      thumbnail: String!
-      description: String!
-      dropdowns: [DropdownInput!]!
-    ): Post!
+    createPost(input: PostInput!): Post!
   }
 
   input PostInput {

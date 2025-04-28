@@ -10,27 +10,28 @@ async function startServer() {
   const app = express();
 
   dotenv.config();
-  
+
+  // Apply express.json() middleware before CORS and Apollo Server middleware
+  app.use(express.json());  // Ensure this is called before Apollo
+
+  // Apply CORS middleware before Apollo Server middleware
+  app.use(cors());
+
   // Set up Apollo Server
   const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
   });
 
   await server.start();
 
+  // Connect to the database
   await connectDB();
-
-  // Apply CORS middleware before express.json()
-  app.use(cors());
-
-  // Apply express.json() middleware before Apollo Server middleware
-  app.use(express.json());
 
   // Apollo Server middleware to handle GraphQL requests
   app.use('/graphql', expressMiddleware(server, {
     context: async ({ req, res }) => {
-      return { req, res };
+      return { req, res };  // Make sure you pass the req and res to the context
     },
   }));
 
