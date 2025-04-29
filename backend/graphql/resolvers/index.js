@@ -1,4 +1,5 @@
 import postResolvers from "./postResolver.js";
+import userResolvers from "./userResolver.js";
 
 export const resolvers = {
   Query: {
@@ -6,6 +7,8 @@ export const resolvers = {
   },
 
   Mutation:{
+    ...userResolvers.Mutation,
     ...postResolvers.Mutation
+    
   }
 };
