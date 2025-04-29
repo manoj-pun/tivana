@@ -30,11 +30,50 @@ const userResolvers = {
                     password: hashedPassword,
                 });
 
-                return user;
+                return {
+                    _id: user._id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    email: user.email,
+                };
             } catch (err) {
                 throw new Error(err.message || 'Error creating user');
             }
-        }
+        },
+
+        loginUser: async(_, { input }) => {
+            const { email, password } = input;
+
+            // Check if all required fields are provided
+            if (!email || !password) {
+                throw new Error('All fields are required');
+            }
+
+            try {
+                // Check if the user exists
+                const user = await userModel.findOne({ email });
+                if (!user) {
+                    throw new Error('User not found');
+                }
+
+                // Check if the password is correct
+                const isMatch = await bcrypt.compare(password, user.password);
+                if (!isMatch) {
+                    throw new Error('Invalid credentials');
+                }
+
+                return {
+                    _id: user._id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    email: user.email,
+                };
+            } catch (err) {
+                throw new Error(err.message || 'Error logging in');
+            }
+        },
+
+        
     }
 }
 
