@@ -11,14 +11,29 @@ const userTypeDefs = gql`
         # profileImage: String!
     }
 
+    type RegisterResponse {
+        user: User!
+        token: String!
+    }
+
+    type LoginResponse {
+        user: User!
+        token: String!
+    }
+
+    type logoutResponse {
+        message: String!
+    }
+
     type Query {
         users: [User!]!
         user(id: ID!): User
     }
 
     type Mutation {
-        registerUser(input: UserInput!): User!
-        loginUser(input: LoginInput!): User!
+        registerUser(input: UserInput!): RegisterResponse!
+        loginUser(input: LoginInput!): LoginResponse!
+        logoutUser: logoutResponse!
     }
 
     input UserInput {

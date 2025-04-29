@@ -1,10 +1,13 @@
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { typeDefs, resolvers } from './graphql/schema.js';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import context from './middlewares/authMiddleware.js';
+
 
 async function startServer() {
   const app = express();
@@ -14,6 +17,8 @@ async function startServer() {
   // Apply express.json() middleware before CORS and Apollo Server middleware
   app.use(express.json());  // Ensure this is called before Apollo
 
+  app.use(cookieParser());
+  
   // Apply CORS middleware before Apollo Server middleware
   app.use(cors());
 
@@ -21,6 +26,7 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context
   });
 
   await server.start();
