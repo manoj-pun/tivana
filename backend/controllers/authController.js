@@ -5,6 +5,10 @@ import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
   const { username, fullname, email, password } = req.body;
 
+  if (!username || !fullname || !email || !password) {
+    return res.json({ success: false, message: "All the fields are required" });
+  }
+
   const usernameRegex = /^[a-z]+[a-z0-9]*$/;
   if (!usernameRegex.test(username)) {
     return res.json({
@@ -12,10 +16,6 @@ export const registerUser = async (req, res) => {
       message:
         "Username must start with lowercase letters and may contain numbers only after letters. No symbols allowed.",
     });
-  }
-
-  if (!username || !fullname || !email || !password) {
-    return res.json({ success: false, message: "All the fields are required" });
   }
 
   try {
@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
     }
 
     if (userExists) {
-      return res.json({ success: false, message: "User already exists" });
+      return res.json({ success: false, message: "Email already signed up." });
     }
 
     const salt = await bcrypt.genSalt(10);
