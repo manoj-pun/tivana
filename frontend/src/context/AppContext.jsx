@@ -8,42 +8,17 @@ export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const storedLoggedIn = localStorage.getItem("isLoggedIn");
-    return storedLoggedIn === "true" || false;
-  });
-  const [userData, setUserData] = useState(null); // Initialize userData to null
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(false);
 
-  const getUserData = async () => {
-    try {
-      const { data } = await axios.get(backendUrl + "/api/user/user-data");
-      if (data.success) {
-        setUserData(data.userData);
-      } else {
-        toast.error(data.message);
-        setIsLoggedIn(false);
-        localStorage.removeItem("isLoggedIn");
-        setUserData(null); // Clear userData on failure
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message);
-      setIsLoggedIn(false);
-      localStorage.removeItem("isLoggedIn");
-      setUserData(null); // Clear userData on error
+  const getUserData = async() => {
+    try{
+      const {data} = await axios.get(backendUrl + "/api/user/user-data")
+      data.success ? setUserData(data.userData) : toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
     }
-  };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      getUserData();
-    } else {
-      setUserData(null); // Clear userData if not logged in
-    }
-  }, [isLoggedIn]); // Fetch user data when isLoggedIn changes
-
-  useEffect(() => {
-    localStorage.setItem("isLoggedIn", isLoggedIn);
-  }, [isLoggedIn]);
+  }
 
   const [activeNavLink, setActiveNavLink] = useState(localStorage.getItem("activeNavLink") || "home");
   const [showSearch, setShowSearch] = useState(false);

@@ -27,7 +27,9 @@ const Login = () => {
             const { data } = await axios.post(backendUrl + "/api/auth/register-user", {
               username, fullname, email, password,
             });
-      
+            
+            // console.log(data)
+
             if (data.success) {
               setIsLoggedIn(true);
               getUserData()
@@ -40,6 +42,8 @@ const Login = () => {
             const { data } = await axios.post(backendUrl + "/api/auth/login-user", {
               email, password,
             });
+
+            // console.log(data)
       
             if (data.success) {
               setIsLoggedIn(true);
@@ -50,7 +54,7 @@ const Login = () => {
             }
           }
         } catch (error) {
-          toast.error(error.response?.data?.message);
+          toast.error(data.message);
         }
       };
       
@@ -69,21 +73,21 @@ const Login = () => {
                 {state === "Sign Up" && (
                     <>
                         <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
-                            <input onChange={e => setUsername(e.target.value)} value={username} className='bg-transparent outline-none' type="text" placeholder='username' required/>
+                            <input onChange={e => setUsername(e.target.value)} value={username} className='bg-transparent outline-none' type="text" placeholder='username'/>
                         </div>
 
                         <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
-                            <input onChange={e => setFullname(e.target.value)} value={fullname} className='bg-transparent outline-none' type="text" placeholder='Full Name' required/>
+                            <input onChange={e => setFullname(e.target.value)} value={fullname} className='bg-transparent outline-none' type="text" placeholder='Full Name'/>
                         </div>
                     </>
                 )}
                 
                 <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
-                    <input onChange={e => setEmail(e.target.value)} value={email} className='bg-transparent outline-none' type="email" placeholder='Email' required/>
+                    <input onChange={e => setEmail(e.target.value)} value={email} className='bg-transparent outline-none' type="email" placeholder='Email'/>
                 </div>
 
                 <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
-                    <input onChange={e => setPassword(e.target.value)} value={password} className='bg-transparent outline-none' type="password" placeholder='Password' required/>
+                    <input onChange={e => setPassword(e.target.value)} value={password} className='bg-transparent outline-none' type="password" placeholder='Password'/>
                 </div>
 
                 {/* <p onClick={() => navigate("/reset-password")} className='mb-4 text-indigo-500 cursor-pointer'>Forgot Password ?</p> */}

@@ -16,12 +16,16 @@ import Comment from "./components/Comment";
 import UserUploadedPosts from "./components/UserUploadedPosts";
 import UserSavedPosts from "./components/UserSavedPosts";
 import Login from "./pages/Login";
+import { ToastContainer } from "react-toastify";
+
 
 const App = () => {
   const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts } = useContext(AppContext);
 
   return (
     <>
+      <ToastContainer/>
+
       {isLoggedIn ? (
         <div className="flex">
           <Sidebar />
