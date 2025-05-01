@@ -11,16 +11,16 @@ const Login = () => {
 
     const {backendUrl,setIsLoggedIn,getUserData} = useContext(AppContext)
 
-    const [state,setState] = useState("Sign Up");
+    const [state,setState] = useState("Login");
     const [username,setUsername] = useState("")
     const [fullname,setFullname] = useState("")
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
 
     const onSubmitHandler = async (e) => {
-        e.preventDefault(); // fix: add this parameter
-      
         try {
+          e.preventDefault();
+
           axios.defaults.withCredentials = true;
       
           if (state === "Sign Up") {
@@ -30,6 +30,7 @@ const Login = () => {
       
             if (data.success) {
               setIsLoggedIn(true);
+              getUserData()
               navigate("/");
             } else {
               toast.error(data.message);
@@ -42,13 +43,14 @@ const Login = () => {
       
             if (data.success) {
               setIsLoggedIn(true);
+              getUserData()
               navigate("/");
             } else {
               toast.error(data.message);
             }
           }
         } catch (error) {
-          toast.error(error.response?.data?.message || "Something went wrong");
+          toast.error(error.response?.data?.message);
         }
       };
       

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import { AppContext } from "./context/AppContext";
 import Search from "./components/Search";
@@ -16,43 +16,43 @@ import Comment from "./components/Comment";
 import UserUploadedPosts from "./components/UserUploadedPosts";
 import UserSavedPosts from "./components/UserSavedPosts";
 import Login from "./pages/Login";
-import {ToastContainer} from "react-toastify"
 
 const App = () => {
-  const location = useLocation();
-  const { pathname } = location;
-  const { showSearch,showNotifications,showMenu,showSend,showFollowers,showFollowing,showComment,showUserUploadedPosts,showUserSavedPosts,} = useContext(AppContext);
-
-  const isLoginPage = pathname === "/login";
+  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts } = useContext(AppContext);
 
   return (
-    <div className="flex">
+    <>
+      {isLoggedIn ? (
+        <div className="flex">
+          <Sidebar />
 
-      <ToastContainer/>
+          <div className="flex-1 ml-[250px] max-sm:ml-[70px]">
+            {showSearch && <Search />}
+            {showNotifications && <Notifications />}
+            {showMenu && <Menu />}
+            {showSend && <Send />}
+            {showFollowers && <Followers />}
+            {showFollowing && <Following />}
+            {showComment && <Comment />}
+            {showUserUploadedPosts && <UserUploadedPosts />}
+            {showUserSavedPosts && <UserSavedPosts />}
 
-      {!isLoginPage && <Sidebar />}
-
-      <div className={`flex-1 ${!isLoginPage ? "ml-[250px] max-sm:ml-[70px]" : ""}`}>
-        {showSearch && <Search />}
-        {showNotifications && <Notifications />}
-        {showMenu && <Menu />}
-        {showSend && <Send />}
-        {showFollowers && <Followers />}
-        {showFollowing && <Following />}
-        {showComment && <Comment />}
-        {showUserUploadedPosts && <UserUploadedPosts />}
-        {showUserSavedPosts && <UserSavedPosts />}
-
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/:username" element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </div>
+        </div>
+      ) : (
         <Routes>
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/:username" element={<Profile />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect any other route to /login if not logged in */}
         </Routes>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ import { assets,homeData } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Sidebar = () => {
-  const { setShowSearch, setShowNotifications, setShowMenu, activeNavLink, setActiveNavLink, users } = useContext(AppContext);
+  const { setShowSearch, setShowNotifications, setShowMenu, activeNavLink, setActiveNavLink, users, userData,} = useContext(AppContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,10 +68,10 @@ const Sidebar = () => {
     navigate(`/${username}`);
 
   // Get the first user from homeData for now
-  const firstUser = homeData[0];
-  if (firstUser) {
-    navigate(`/${firstUser.username}`);
-  }
+  // const firstUser = homeData[0];
+  // if (firstUser) {
+  //   navigate(`/${firstUser.username}`);
+  // }
   };
 
   return (
@@ -114,9 +114,19 @@ const Sidebar = () => {
           </div>
 
           {/* Profile Div */}
-          <div className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${activeNavLink === "profile" ? "text-[#32CD32] font-semibold" : "text-white"}`} onClick={() => handleProfileClick()}>
+          <div className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${activeNavLink === "profile" ? "text-[#32CD32] font-semibold" : "text-white"}`} onClick={() => handleProfileClick(userData?.username)}>
             <img src={assets.profile} alt="" className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7" />
-            <p className="max-sm:hidden">Profile</p>
+            <p className="max-sm:hidden">{userData?.username}</p>
+
+            {/* 
+               Without optional chaining (userData.username):
+              On first render, userData is null or false, so accessing userData.username throws:
+              TypeError: Cannot read properties of null (reading 'username')
+
+              With optional chaining (userData?.username):
+              This tells React:
+              "Only try to access .username if userData is not null or undefined."
+            */}
           </div>
 
           {/* Menu Div */}
