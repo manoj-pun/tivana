@@ -10,8 +10,13 @@ export const registerUser = async(req,res) => {
     }
 
     try{
+        const usernameExist = await userModel.findOne({username})
         const userExists = await userModel.findOne({email})
 
+        if(usernameExist){
+            return res.json({success:false, message:"Username is already used."})
+        }
+        
         if(userExists){
             return res.json({success:false, message:"User already exists"})
         }
