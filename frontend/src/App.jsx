@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Routes,Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import { AppContext } from "./context/AppContext";
 import Search from "./components/Search";
@@ -15,33 +15,42 @@ import Following from "./components/Following";
 import Comment from "./components/Comment";
 import UserUploadedPosts from "./components/UserUploadedPosts";
 import UserSavedPosts from "./components/UserSavedPosts";
+import Login from "./pages/Login";
+import {ToastContainer} from "react-toastify"
 
 const App = () => {
-  const { showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts } = useContext(AppContext);
+  const location = useLocation();
+  const { pathname } = location;
+  const { showSearch,showNotifications,showMenu,showSend,showFollowers,showFollowing,showComment,showUserUploadedPosts,showUserSavedPosts,} = useContext(AppContext);
+
+  const isLoginPage = pathname === "/login";
 
   return (
     <div className="flex">
-      <Sidebar />
 
-      <div className="flex-1 ml-[250px] max-sm:ml-[70px]">
+      <ToastContainer/>
+
+      {!isLoginPage && <Sidebar />}
+
+      <div className={`flex-1 ${!isLoginPage ? "ml-[250px] max-sm:ml-[70px]" : ""}`}>
         {showSearch && <Search />}
         {showNotifications && <Notifications />}
         {showMenu && <Menu />}
-        {showSend && <Send/>}
-        {showFollowers && <Followers/>}
-        {showFollowing && <Following/>}
-        {showComment && <Comment/>}
-        {showUserUploadedPosts && <UserUploadedPosts/>}
-        {showUserSavedPosts && <UserSavedPosts/>}
+        {showSend && <Send />}
+        {showFollowers && <Followers />}
+        {showFollowing && <Following />}
+        {showComment && <Comment />}
+        {showUserUploadedPosts && <UserUploadedPosts />}
+        {showUserSavedPosts && <UserSavedPosts />}
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/:username" element={<Profile />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
-
       </div>
     </div>
   );
