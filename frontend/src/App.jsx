@@ -53,7 +53,6 @@ const App = () => {
       ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" />} /> {/* Redirect any other route to /login if not logged in */}
         </Routes>
       )}
     </>

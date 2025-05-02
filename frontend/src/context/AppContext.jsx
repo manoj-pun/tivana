@@ -9,16 +9,40 @@ export const AppContextProvider = (props) => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(false);
+  const [userData, setUserData] = useState(null);
 
-  const getUserData = async() => {
-    try{
-      const {data} = await axios.get(backendUrl + "/api/user/user-data")
-      data.success ? setUserData(data.userData) : toast.error(data.message)
-    }catch(error){
-      toast.error(error.message)
+  const getAuthState = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/auth/is-auth");
+      if (data.success) {
+        setIsLoggedIn(true);
+        await getUserData(); 
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      setIsLoggedIn(false);
     }
-  }
+  };
+
+  const getUserData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/user/user-data");
+      if (data.success) {
+        setUserData(data.userData);
+      } else {
+        setIsLoggedIn(false);
+        toast.error(data.message);
+      }
+    } catch (error) {
+      setIsLoggedIn(false);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAuthState();
+  }, []);
 
   const [activeNavLink, setActiveNavLink] = useState(localStorage.getItem("activeNavLink") || "home");
   const [showSearch, setShowSearch] = useState(false);
