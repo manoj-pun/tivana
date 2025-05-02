@@ -111,3 +111,12 @@ export const logoutUser = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
+//check if the user is authenticated
+export const isAuthenticated = async(req,res) => {
+  try {
+      return res.json({success:true})
+  } catch (error) {
+      res.json({success:false,message:error.message})
+  }
+}
