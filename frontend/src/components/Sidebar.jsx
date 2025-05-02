@@ -12,19 +12,22 @@ const Sidebar = () => {
   // Sync activeNavLink with the current route on page load
   useEffect(() => {
     const path = location.pathname.substring(1); // Remove leading '/'
+  
     if (path === "") {
       setActiveNavLink("home");
     } else if (path === "explore") {
       setActiveNavLink("explore");
     } else if (path === "messages") {
       setActiveNavLink("messages");
+    } else if (path === "notifications") {
+      setActiveNavLink("notifications");
+    } else if (path === "menu") {
+      setActiveNavLink("menu");
     } else {
-      if (users?.some((user) => user.username === path)) {
-        setActiveNavLink("profile");
-      }
+      // Assume it's a profile route — set to 'profile' regardless of user match
+      setActiveNavLink("profile");
     }
-  }, [location.pathname, setActiveNavLink, users]);
-  
+  }, [location.pathname, setActiveNavLink]);  
 
   // Function to handle NavLink clicks
   const handleNavLinkClick = (navLink, path) => {
