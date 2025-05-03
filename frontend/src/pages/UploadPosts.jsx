@@ -168,7 +168,7 @@ const UploadPosts = () => {
                 />
               </label>
 
-              <textarea className="w-full p-2 border-2 border-pink-400 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 hover:border-[#32CD32] transition duration-200 mb-4 bg-black"
+              <textarea className="w-full p-2 border-2 border-pink-400 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 text-white hover:border-[#32CD32] transition duration-200 mb-4 bg-black"
                 placeholder="Description..."
                 rows={3}
                 value={dropdown.description}
