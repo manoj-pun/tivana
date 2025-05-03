@@ -10,8 +10,11 @@ const userAuth = async (req, res, next) => {
     try {
         const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (tokenDecode.id) {
-            req.user = { id: tokenDecode.id }; 
+        if (tokenDecode.id && tokenDecode.username) {
+            req.user = {
+                id: tokenDecode.id,
+                username: tokenDecode.username,
+            };
             return next(); 
         } else {
             return res.json({ success: false, message: "Not Authorized. Login again!" });
@@ -20,5 +23,6 @@ const userAuth = async (req, res, next) => {
         return res.json({ success: false, message: error.message });
     }
 };
+
 
 export default userAuth;
