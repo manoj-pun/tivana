@@ -9,11 +9,10 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Sync activeNavLink with the current route on page load
   useEffect(() => {
     const path = location.pathname.substring(1); // Remove leading '/'
   
-    if (path === "") {
+    if (path === "" || path === "home") {
       setActiveNavLink("home");
     } else if (path === "explore") {
       setActiveNavLink("explore");
@@ -24,10 +23,10 @@ const Sidebar = () => {
     } else if (path === "menu") {
       setActiveNavLink("menu");
     } else {
-      // Assume it's a profile route — set to 'profile' regardless of user match
       setActiveNavLink("profile");
     }
-  }, [location.pathname, setActiveNavLink]);  
+  }, [location.pathname, setActiveNavLink]);
+    
 
   // Function to handle NavLink clicks
   const handleNavLinkClick = (navLink, path) => {
@@ -87,7 +86,7 @@ const Sidebar = () => {
           </div>
 
           {/* Home Div */}
-          <div className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${activeNavLink === "home" ? "text-[#32CD32] font-semibold" : "text-white"}`} onClick={() => handleNavLinkClick("home", "/")}>
+          <div className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${activeNavLink === "home" ? "text-[#32CD32] font-semibold" : "text-white"}`} onClick={() => handleNavLinkClick("home", "/home")}>
             <img src={activeNavLink === "home" ? assets.homeFilled : assets.home} alt="" className="w-6 h-6"/>
             <p className="max-sm:hidden ml-2">Home</p>
           </div>

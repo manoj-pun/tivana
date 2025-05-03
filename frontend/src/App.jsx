@@ -42,7 +42,7 @@ const App = () => {
             {showUserSavedPosts && <UserSavedPosts />}
 
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/:username" element={<Profile />} />
@@ -52,7 +52,7 @@ const App = () => {
         </div>
       ) : (
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       )}
     </>

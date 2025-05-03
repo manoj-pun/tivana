@@ -20,7 +20,7 @@ const Menu = () => {
         setIsLoggedIn(false);
         setUserData(false);
         setShowMenu(false);
-        navigate("/login");
+        navigate("/");
       }
     }catch(error){
       toast.error(error.message)
