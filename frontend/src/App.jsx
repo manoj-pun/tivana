@@ -17,6 +17,7 @@ import UserUploadedPosts from "./components/UserUploadedPosts";
 import UserSavedPosts from "./components/UserSavedPosts";
 import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
+import UploadPosts from "./pages/UploadPosts";
 
 
 const App = () => {
@@ -53,6 +54,7 @@ const App = () => {
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/upload-post" element={<UploadPosts/>} />
         </Routes>
       )}
     </>
