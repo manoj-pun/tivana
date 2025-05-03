@@ -10,9 +10,9 @@ export const uploadPost = async (req, res) => {
             return res.json({ success: false, message: "Image is required" });
         }
 
-        const userId = req.user?.id;
+        const username = req.user?.username;
 
-        if (!userId) {
+        if (!username) {
             return res.json({ success: false, message: "User not authorized" });
         }
 
@@ -32,11 +32,11 @@ export const uploadPost = async (req, res) => {
         }
 
         const result = await cloudinary.uploader.upload(thumbnailFile.path, {
-            folder: "tivana",
+            folder: `tivana/users/${username}/profileinfo`,
         });
 
         const newPost = new postModel({
-            userId,
+            username,
             description,
             thumbnail: result.secure_url,
             dropdowns,
