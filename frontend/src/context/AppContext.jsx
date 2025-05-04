@@ -10,6 +10,7 @@ export const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [profileData,setProfileData] = useState(null);
 
   const getAuthState = async () => {
     try {
@@ -40,6 +41,12 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // const getProfileData = async () => {
+  //   try{
+  //     const {data} = await axios.get(backendUrl + "/api/user/upload-profile-picture",profile);
+  //   }
+  // }
+
   useEffect(() => {
     getAuthState();
   }, []);
@@ -56,6 +63,7 @@ export const AppContextProvider = (props) => {
   const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
   const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
 
   const value = {
     backendUrl,
@@ -88,6 +96,7 @@ export const AppContextProvider = (props) => {
     setShowUserSavedPosts,
     selectedPost,
     setSelectedPost,
+    showUploadProfilePicture, setShowUploadProfilePicture
   };
 
   return (

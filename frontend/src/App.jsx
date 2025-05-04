@@ -18,10 +18,11 @@ import UserSavedPosts from "./components/UserSavedPosts";
 import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
 import UploadPosts from "./pages/UploadPosts";
+import UploadProfilePicture from "./components/UploadProfilePicture";
 
 
 const App = () => {
-  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts } = useContext(AppContext);
+  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture } = useContext(AppContext);
 
   return (
     <>
@@ -41,6 +42,7 @@ const App = () => {
             {showComment && <Comment />}
             {showUserUploadedPosts && <UserUploadedPosts />}
             {showUserSavedPosts && <UserSavedPosts />}
+            {showUploadProfilePicture && <UploadProfilePicture/>}
 
             <Routes>
               <Route path="/home" element={<Home />} />

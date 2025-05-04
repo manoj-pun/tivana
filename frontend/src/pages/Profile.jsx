@@ -4,7 +4,7 @@ import { assets, homeData } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Profile = () => {
-  const { setShowFollowers, setShowFollowing, setCurrentUser, setShowUserUploadedPosts,setShowUserSavedPosts, setSelectedPost } = useContext(AppContext);
+  const { setShowFollowers, setShowFollowing, setCurrentUser, setShowUserUploadedPosts,setShowUserSavedPosts, setSelectedPost,setShowUploadProfilePicture } = useContext(AppContext);
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("posts");
   const [user, setUser] = useState(null);
@@ -26,10 +26,10 @@ const Profile = () => {
       {/* Profile Header */}
       <div className="border-b-2 pb-8 flex flex-col items-center w-full max-w-4xl">
         <div className="flex gap-16 items-start">
-          <div className="shrink-0">
+          <div className="shrink-0" onClick={() => setShowUploadProfilePicture(true)}>
             <img
               src={user.profileImage || assets.profile}
-              className="w-44 h-44 rounded-full object-cover"
+              className="w-44 h-44 rounded-full object-cover cursor-pointer"
               alt="Profile"
             />
           </div>
