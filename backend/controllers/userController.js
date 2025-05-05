@@ -2,24 +2,31 @@ import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 export const uploadProfilePicture = async (req, res) => {
-    const imageFile = req.file;
+    const profileImage = req.file;
 
-    if (!imageFile) {
+    if (!profileImage) {
         return res.json({ success: false, message: "Please select the profile picture" });
     }
 
-    const username = req.user?.username;
-
-    if (!username) {
-        return res.json({ success: false, message: "User not authorized" });
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.json({ success: false, message: "User not authorized" });
     }
 
+    const userDoc = await userModel.findById(userId);
+    if (!userDoc) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    const username = userDoc.username;
+    const fullname = userDoc.fullname;
+
     try {
-        const result = await cloudinary.uploader.upload(imageFile.path, {
-            folder: `tivana/users/${username}/profile`,
+        const result = await cloudinary.uploader.upload(profileImage.path, {
+            folder: `tivana/users/${username}/profileInfo/UserProfileImage`,
         });
 
-        return res.json({ success: true, message: "Profile picture uploaded", username, imageUrl: result.secure_url });
+        return res.json({ success: true, message: "Profile picture uploaded", username,fullname, imageUrl: result.secure_url });
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
