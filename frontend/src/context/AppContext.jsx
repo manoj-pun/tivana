@@ -10,7 +10,9 @@ export const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [profileData,setProfileData] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [profileUser, setProfileUser] = useState(null); // New state for profile user data
 
   const getAuthState = async () => {
     try {
@@ -41,11 +43,36 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // const getProfileData = async () => {
-  //   try{
-  //     const {data} = await axios.get(backendUrl + "/api/user/upload-profile-picture",profile);
-  //   }
-  // }
+  // New function to fetch profile data
+  const fetchProfileData = async (username) => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/user/profile/${username}`);
+      if (data.success) {
+        setProfileUser(data.user);
+        return data.user;
+      } else {
+        toast.error(data.message || "User not found");
+        return null;
+      }
+    } catch (error) {
+      toast.error("Failed to fetch profile. Please try again.");
+      return null;
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      setLoadingPosts(true);
+      const { data } = await axios.get(backendUrl + "/api/post/get-posts");
+      if (data.success) {
+        setPosts(data.posts);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch posts");
+    } finally {
+      setLoadingPosts(false);
+    }
+  };
 
   useEffect(() => {
     getAuthState();
@@ -72,6 +99,9 @@ export const AppContextProvider = (props) => {
     userData,
     setUserData,
     getUserData,
+    profileUser,
+    setProfileUser,
+    fetchProfileData, // Add the new function to context value
     activeNavLink,
     setActiveNavLink,
     showSearch,
@@ -96,7 +126,13 @@ export const AppContextProvider = (props) => {
     setShowUserSavedPosts,
     selectedPost,
     setSelectedPost,
-    showUploadProfilePicture, setShowUploadProfilePicture
+    showUploadProfilePicture, 
+    setShowUploadProfilePicture,
+    posts,
+    setPosts,
+    loadingPosts,
+    setLoadingPosts,
+    fetchPosts,
   };
 
   return (
