@@ -1,6 +1,6 @@
 import userModel from "../models/userModel.js";
 import postModel from "../models/postModel.js";
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary";
 
 export const uploadPost = async (req, res) => {
   try {
@@ -83,6 +83,19 @@ export const uploadPost = async (req, res) => {
       message: "Post uploaded successfully",
       post: populatedPost,
     });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const getPosts = async (req, res) => {
+  try {
+    const posts = await postModel
+      .find()
+      .sort({ createdAt: -1 })
+      .populate("userId", "username fullname profileImage");
+
+    res.json({ success: true, posts });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
