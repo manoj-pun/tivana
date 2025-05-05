@@ -8,7 +8,7 @@ const UploadProfilePicture = () => {
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-md bg-black/30 flex justify-center items-center">
       <div className="bg-[#212121] px-4 flex flex-col text-center gap-3 w-96 rounded-xl">
-        <h1 className="text-white mt-3 cursor-default font-semibold">Change Profile Photo</h1>
+        <h1 className="text-white mt-6 mb-3 cursor-default font-semibold">Change Profile Photo</h1>
         <hr className="text-gray-300" />
 
         <div className="relative cursor-pointer">
