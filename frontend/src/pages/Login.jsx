@@ -61,7 +61,7 @@ const Login = () => {
 
   return (
     <div className='flex items-center justify-center min-h-screen px-6 sm:px-0 bg-black'>
-        <div onClick={() => navigate("/")} className="absolute top-5 left-5 sm:left-20 flex items-center gap-2">
+        <div onClick={() => navigate("/home")} className="absolute top-5 left-5 sm:left-20 flex items-center gap-2">
             <img src={assets.logo} alt="" className="w-10 h-10 rounded cursor-pointer sm:hidden" />
             <p className="hidden sm:block font-serif italic text-2xl cursor-pointer max-sm:hidden text-white">Tivana</p>
         </div>
