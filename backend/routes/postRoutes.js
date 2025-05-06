@@ -5,7 +5,11 @@ import userAuth from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/upload-post", userAuth, upload.single("image"), uploadPost);
+router.post("/upload-post", userAuth, upload.fields([
+    {name:"thumbnailImage",maxCount:1},
+    {name:"dropdownImages",maxCount:10}
+]), uploadPost);//This will upload single and multiple images for same path
+// router.post("/upload-post", userAuth, upload.array("dropdownImages"), uploadPost); This is for uploading multiple images
 router.get("/get-posts",userAuth,getPosts);
 
 export default router;
