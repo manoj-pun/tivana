@@ -50,13 +50,13 @@ const App = () => {
               <Route path="/messages" element={<Messages />} />
               <Route path="/:username" element={<Profile />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/upload-post" element={<UploadPosts/>} />
             </Routes>
           </div>
         </div>
       ) : (
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<UploadPosts/>} />
+          <Route path="/" element={<Login />} />
         </Routes>
       )}
     </>
