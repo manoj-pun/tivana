@@ -24,6 +24,7 @@ import rightArrow from "./chevron.png";
 import leftArrow from "./left-chevron.png";
 import comment from "./comment.png";
 import uploadArea from "./upload_area.png"
+import loginCover from "./loginCover.png"
 
 import profile from "./profile.jpeg"
 import check from "./check.jpeg"
@@ -89,7 +90,8 @@ export const assets = {
     abc,
     profile,
     pokhara,
-    uploadArea
+    uploadArea,
+    loginCover
 };
 
 export const searchData = [

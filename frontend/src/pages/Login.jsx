@@ -61,32 +61,36 @@ const Login = () => {
 
   return (
     <div className='flex items-center justify-center min-h-screen px-6 sm:px-0 bg-black'>
-        <div onClick={() => navigate("/home")} className="absolute top-5 left-5 sm:left-20 flex items-center gap-2">
+        <div className="absolute top-5 left-5 sm:left-20 flex items-center gap-2">
             <img src={assets.logo} alt="" className="w-10 h-10 rounded cursor-pointer sm:hidden" />
             <p className="hidden sm:block font-serif italic text-2xl cursor-pointer max-sm:hidden text-white">Tivana</p>
         </div>
 
+        <div className='max-md:hidden'>
+          <img src={assets.loginCover} alt="" />
+        </div>
+
         <div className='bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm'>
-            <h2 className='text-3xl font-semibold text-white text-center mb-3'>{state === "Sign Up" ? "Create Account" : "Login"}</h2>
-            <p className='text-center text-sm mb-6'>{state === "Sign Up" ? "Create your account" : "Login to your account"}</p>
+            <h2 className='text-3xl font-semibold text-white text-center mb-4'>{state === "Sign Up" ? "Create Account" : "Login"}</h2>
+            <p className='text-center text-sm mb-12'>{state === "Sign Up" ? "Create your account" : "Login to your account"}</p>
             <form onSubmit={onSubmitHandler}>
                 {state === "Sign Up" && (
                     <>
-                        <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+                        <div className='mb-6 flex items-center gap-3 w-full px-5 py-3 rounded-full bg-[#333A5C]'>
                             <input onChange={e => setUsername(e.target.value)} value={username} className='bg-transparent outline-none' type="text" placeholder='username'/>
                         </div>
 
-                        <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+                        <div className='mb-6 flex items-center gap-3 w-full px-5 py-3 rounded-full bg-[#333A5C]'>
                             <input onChange={e => setFullname(e.target.value)} value={fullname} className='bg-transparent outline-none' type="text" placeholder='Full Name'/>
                         </div>
                     </>
                 )}
                 
-                <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+                <div className='mb-6 flex items-center gap-3 w-full px-5 py-3 rounded-full bg-[#333A5C]'>
                     <input onChange={e => setEmail(e.target.value)} value={email} className='bg-transparent outline-none' type="email" placeholder='Email'/>
                 </div>
 
-                <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+                <div className='mb-6 flex items-center gap-3 w-full px-5 py-3 rounded-full bg-[#333A5C]'>
                     <input onChange={e => setPassword(e.target.value)} value={password} className='bg-transparent outline-none' type="password" placeholder='Password'/>
                 </div>
 
@@ -96,11 +100,11 @@ const Login = () => {
             </form>
 
             {state === "Sign Up" ? (
-                <p className='text-gray-400 text-center text-xs mt-4'>Already have an account?{" "}
+                <p className='text-gray-400 text-center text-md mt-4'>Already have an account?{" "}
                 <span onClick={() => setState("Login")} className='text-[#32CD32] cursor-pointer underline'>Login here</span>
                 </p>
             ) : (
-                <p className='text-gray-400 text-center text-xs mt-4'>Don't have an account?{" "}
+                <p className='text-gray-400 text-center text-md mt-4'>Don't have an account?{" "}
                 <span onClick={() => setState("Sign Up")} className='text-[#32CD32] cursor-pointer underline'>Sign up</span>
                 </p>
             )}   
