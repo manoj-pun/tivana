@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { assets, homeData } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
-import { toast } from "react-toastify";
 
 const Profile = () => {
   const { 
@@ -12,39 +11,33 @@ const Profile = () => {
     setShowUserUploadedPosts, 
     setShowUserSavedPosts, 
     setSelectedPost, 
-    setShowUploadProfilePicture, 
-    profileUser,
-    fetchProfileData
+    setShowUploadProfilePicture,
   } = useContext(AppContext);
   
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("posts");
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      const user = await fetchProfileData(username);
-      if (user) {
-        setCurrentUser(user);
-      }
-    };
-    
-    loadProfile();
-  }, [username, fetchProfileData, setCurrentUser]);
+  // Find the profile user
+  const profileUser = homeData.find(user => user.username === username);
+
+  // Set current user when profile loads
+  React.useEffect(() => {
+    if (profileUser) {
+      setCurrentUser(profileUser);
+    }
+  }, [profileUser, setCurrentUser]);
 
   if (!profileUser) {
     return <div className="text-white text-center pt-10">User not found</div>;
   }
 
-  // Static data from homeData (using first user as placeholder)
-  const staticProfileData = {
-    postsCount: homeData[0]?.profileSection?.postsCount || 0,
-    followersCount: homeData[0]?.profileSection?.followersCount || 0,
-    followingCount: homeData[0]?.profileSection?.followingCount || 0,
-    bio: homeData[0]?.profileSection?.bio || "No bio yet",
-    userPosts: homeData[0]?.userPosts || [],
-    savedPosts: homeData[0]?.savedPosts || [],
-    noPostsMessage: "No posts yet",
-    noSavedPostsMessage: "No saved posts yet",
+  // Get profile section data
+  const profileSection = profileUser.profileSection || {};
+  
+  // Handle post click
+  const handlePostClick = (post, isSaved = false) => {
+    setSelectedPost(post);
+    isSaved ? setShowUserSavedPosts(true) : setShowUserUploadedPosts(true);
   };
 
   return (
@@ -63,39 +56,40 @@ const Profile = () => {
           <div className="flex flex-col gap-y-3 flex-1">
             <div className="flex items-center gap-4 mb-2">
               <span className="text-[18px]">{profileUser.username}</span>
-              <button className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer">
+              <button 
+                className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
+              >
                 Edit profile
               </button>
             </div>
 
             <div className="flex gap-4 text-sm">
               <span className="font-semibold">
-                {staticProfileData.postsCount}{" "}
-                <span className="text-[#808080]">posts</span>
+                {profileSection.postsCount || 0} <span className="text-[#808080]">posts</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowers(true)}
               >
-                {staticProfileData.followersCount}{" "}
-                <span className="text-[#808080]">followers</span>
+                {profileSection.followersCount || 0} <span className="text-[#808080]">followers</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowing(true)}
               >
-                {staticProfileData.followingCount}{" "}
-                <span className="text-[#808080]">following</span>
+                {profileSection.followingCount || 0} <span className="text-[#808080]">following</span>
               </span>
             </div>
 
-            <div>
-              <span className="font-semibold">{profileUser.name}</span>
-            </div>
+            {profileUser.name && (
+              <div>
+                <span className="font-semibold">{profileUser.name}</span>
+              </div>
+            )}
 
             <div className="w-[400px]">
               <p className="text-[14px] leading-relaxed">
-                {staticProfileData.bio}
+                {profileSection.bio || "No bio yet"}
               </p>
             </div>
           </div>
@@ -115,13 +109,7 @@ const Profile = () => {
             className="w-4 h-4 inline-block"
             alt="Posts"
           />
-          <p
-            className={
-              activeTab === "posts"
-                ? "text-[#32CD32] text-[13px] font-semibold"
-                : "text-white text-[13px]"
-            }
-          >
+          <p className={activeTab === "posts" ? "text-[#32CD32] text-[13px] font-semibold" : "text-white text-[13px]"}>
             POSTS
           </p>
         </div>
@@ -137,13 +125,7 @@ const Profile = () => {
             className="w-4 h-4 inline-block"
             alt="Saved"
           />
-          <p
-            className={
-              activeTab === "saved"
-                ? "text-[#32CD32] text-[13px] font-semibold"
-                : "text-white text-[13px]"
-            }
-          >
+          <p className={activeTab === "saved" ? "text-[#32CD32] text-[13px] font-semibold" : "text-white text-[13px]"}>
             SAVED
           </p>
         </div>
@@ -152,9 +134,9 @@ const Profile = () => {
       {/* Content Section */}
       <div className="mt-8 w-full max-w-4xl px-4">
         {activeTab === "posts" ? (
-          staticProfileData.userPosts && staticProfileData.userPosts.length > 0 ? (
+          profileUser.userPosts && profileUser.userPosts.length > 0 ? (
             <div className="grid grid-cols-3 gap-4">
-              {staticProfileData.userPosts.map((post, index) => (
+              {profileUser.userPosts.map((post, index) => (
                 <div
                   key={index}
                   className="w-full aspect-square bg-gray-800 rounded-lg cursor-pointer overflow-hidden"
@@ -162,23 +144,18 @@ const Profile = () => {
                   <img
                     src={post}
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                    onClick={() => {
-                      setShowUserUploadedPosts(true);
-                      setSelectedPost(post); // Set the clicked post
-                    }}
+                    onClick={() => handlePostClick(post)}
                     alt={`Post ${index}`}
                   />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 text-gray-400">
-              {staticProfileData.noPostsMessage}
-            </div>
+            <div className="text-center py-10 text-gray-400">No posts yet</div>
           )
-        ) : staticProfileData.savedPosts && staticProfileData.savedPosts.length > 0 ? (
+        ) : profileUser.savedPosts && profileUser.savedPosts.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
-            {staticProfileData.savedPosts.map((post, index) => (
+            {profileUser.savedPosts.map((post, index) => (
               <div
                 key={index}
                 className="w-full aspect-square bg-gray-800 rounded-lg cursor-pointer overflow-hidden"
@@ -186,19 +163,14 @@ const Profile = () => {
                 <img
                   src={post}
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                  onClick={() => {
-                    setShowUserSavedPosts(true);
-                    setSelectedPost(post); // Set the clicked post
-                  }}
+                  onClick={() => handlePostClick(post, true)}
                   alt={`Saved post ${index}`}
                 />
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-10 text-gray-400">
-            {staticProfileData.noSavedPostsMessage}
-          </div>
+          <div className="text-center py-10 text-gray-400">No saved posts yet</div>
         )}
       </div>
     </div>
