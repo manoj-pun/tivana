@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema(
         profileImage: {
             type: String,
         },
+        userBio:{
+            type: String,
+            default: "No bio yet."
+        },
+        following:{
+            type: String,
+            default: 10,
+        },
+        followers:{
+            type: String,
+            default: 10,
+        }
     },  
     {
         timestamps: true,

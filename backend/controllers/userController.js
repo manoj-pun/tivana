@@ -5,44 +5,105 @@ export const uploadProfilePicture = async (req, res) => {
   const profileImage = req.file;
 
   if (!profileImage) {
-    return res.json({
+    return res.status(400).json({
       success: false,
-      message: "Please select the profile picture",
+      message: "Please select a profile picture.",
     });
   }
 
   const userId = req.user?.id;
   if (!userId) {
-    return res.json({ success: false, message: "User not authorized" });
+    return res.status(401).json({ success: false, message: "User not authorized" });
   }
-
-  const userDoc = await userModel.findById(userId);
-  if (!userDoc) {
-    return res.json({ success: false, message: "User not found" });
-  }
-
-  const username = userDoc.username;
-  const fullname = userDoc.fullname;
 
   try {
-    // Upload the profile picture to Cloudinary
+    // Find user directly and check
+    const user = await userModel.findById(userId);
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(profileImage.path, {
-      folder: `tivana/users/${username}/profileInfo/UserProfileImage`,
+      folder: `tivana/users/${user.username}/profileInfo/UserProfileImage`,
     });
 
-    // Now, update the user's profileImage field in the database
-    userDoc.profileImage = result.secure_url; // Update the profileImage with the Cloudinary URL
-    await userDoc.save(); // Save the updated user document
+    // Update user document
+    user.profileImage = result.secure_url;
+    await user.save();
 
     return res.json({
       success: true,
-      message: "Profile picture uploaded and saved",
-      username,
-      fullname,
-      imageUrl: result.secure_url, // Return the uploaded image URL
+      message: "Profile picture uploaded successfully.",
+      profileImage: user.profileImage
     });
   } catch (error) {
-    return res.json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export const editProfileInfo = async (req, res) => {
+  const { username, fullname, userBio,profileImage } = req.body;
+
+  // Validate required fields
+  if (!username || username.trim() === "") {
+    return res.status(400).json({ success: false, message: "Username is required." });
+  }
+
+  if (!fullname || fullname.trim() === "") {
+    return res.status(400).json({ success: false, message: "Name is required." });
+  }
+
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ success: false, message: "User not authorized" }); // 401 for unauthorized
+  }
+
+  try {
+    // Check if user exists
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" }); // 404 for not found
+    }
+
+    // Check if username is already taken by another user
+    if (username !== user.username) {
+      const usernameExists = await userModel.findOne({ username });
+      if (usernameExists) {
+        return res.status(409).json({ success: false, message: "Username already taken." }); // 409 for conflict
+      }
+    }
+
+    user.username = username;
+    user.fullname = fullname;
+    user.userBio = userBio || user.userBio; 
+    if (profileImage) { 
+      user.profileImage = profileImage;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        fullname: user.fullname,
+        userBio: user.userBio,
+        profileImage: user.profileImage
+      }
+    });
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
   }
 };
 
@@ -61,8 +122,13 @@ export const getUserData = async (req, res) => {
     res.json({
       success: true,
       userData: {
+        userId: user.id,
         username: user.username,
         fullname: user.fullname,
+        profileImage:user.profileImage,
+        followers: user.followers,
+        following:user.following,
+        userBio:user.userBio
       },
     });
   } catch (error) {
@@ -70,29 +136,29 @@ export const getUserData = async (req, res) => {
   }
 };
 
-export const getUserProfile = async (req, res) => {
-  try {
-    const { username } = req.params;
-    const userId = req.user?.id; // Optional for auth check
+// export const getUserProfile = async (req, res) => {
+//   try {
+//     const { username } = req.params;
+//     const userId = req.user?.id; // Optional for auth check
 
-    // Get only the essential profile data
-    const user = await userModel
-      .findOne({ username })
-      .select("username fullname profileImage");
+//     // Get only the essential profile data
+//     const user = await userModel
+//       .findOne({ username })
+//       .select("username fullname profileImage");
 
-    if (!user) {
-      return res.json({ success: false, message: "User not found" });
-    }
+//     if (!user) {
+//       return res.json({ success: false, message: "User not found" });
+//     }
 
-    res.json({
-      success: true,
-      user: {
-        username: user.username,
-        name: user.fullname, 
-        profileImage: user.profileImage
-      },
-    });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
+//     res.json({
+//       success: true,
+//       user: {
+//         username: user.username,
+//         name: user.fullname, 
+//         profileImage: user.profileImage
+//       },
+//     });
+//   } catch (error) {
+//     res.json({ success: false, message: error.message });
+//   }
+// };

@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
-import postRoutes from "./routes/postRoutes.js"
+// import postRoutes from "./routes/postRoutes.js"
 
 const app = express()
 
@@ -26,7 +26,7 @@ app.use(cors({origin:allowedOrigins, credentials:true}))
 
 app.use("/api/auth",authRoutes)
 app.use("/api/user",userRoutes)
-app.use("/api/posts",postRoutes)
+// app.use("/api/posts",postRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
