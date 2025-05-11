@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { assets, homeData } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
@@ -16,6 +16,7 @@ const Profile = () => {
   
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("posts");
+  const navigate = useNavigate()
 
   // Find the profile user
   const profileUser = homeData.find(user => user.username === username);
@@ -56,9 +57,14 @@ const Profile = () => {
           <div className="flex flex-col gap-y-3 flex-1">
             <div className="flex items-center gap-4 mb-2">
               <span className="text-[18px]">{profileUser.username}</span>
-              <button 
-                className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
-              >
+              <button onClick={() => navigate("/edit-profile", {
+                  state: {
+                  username: profileUser.username,
+                  name: profileUser.name,
+                  bio: profileSection.bio,
+                  profileImage: profileUser.profileImage,
+                },
+              })}  className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer">
                 Edit profile
               </button>
             </div>

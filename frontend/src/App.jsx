@@ -19,6 +19,7 @@ import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
 import UploadPosts from "./pages/UploadPosts";
 import UploadProfilePicture from "./components/UploadProfilePicture";
+import EditProfile from "./components/EditProfile";
 
 
 const App = () => {
@@ -51,6 +52,7 @@ const App = () => {
               <Route path="/:username" element={<Profile />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/upload-post" element={<UploadPosts/>} />
+              <Route path="/edit-profile" element={<EditProfile/>} />
             </Routes>
           </div>
         </div>
