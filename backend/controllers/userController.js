@@ -107,7 +107,7 @@ export const editProfile = async (req, res) => {
 
     user.username = username;
     user.fullname = fullname;
-    user.userBio = userBio || user.userBio; 
+    user.userBio = userBio?.trim() === "" ? "No bio yet." : userBio;
     if (profileImage) { 
       user.profileImage = profileImage;
     }
