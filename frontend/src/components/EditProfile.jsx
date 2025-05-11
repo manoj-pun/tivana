@@ -67,7 +67,7 @@ const EditProfile = () => {
       <div className="w-full flex justify-end">
         <button
           type="submit"
-          className="text-white bg-green-500 p-2 px-5 font-medium text-lg rounded hover:bg-green-600 transition-all cursor-pointer"
+          className="text-white bg-green-500 p-2 px-15 font-medium text-lg rounded hover:bg-green-600 transition-all cursor-pointer"
         >
           Submit
         </button>

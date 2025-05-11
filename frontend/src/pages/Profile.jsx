@@ -12,6 +12,7 @@ const Profile = () => {
     setShowUserSavedPosts, 
     setSelectedPost, 
     setShowUploadProfilePicture,
+    userData
   } = useContext(AppContext);
   
   const { username } = useParams();
@@ -19,7 +20,9 @@ const Profile = () => {
   const navigate = useNavigate()
 
   // Find the profile user
-  const profileUser = homeData.find(user => user.username === username);
+  const profileUser = username === userData?.username
+  ? userData
+  : homeData.find(user => user.username === username);
 
   // Set current user when profile loads
   React.useEffect(() => {
