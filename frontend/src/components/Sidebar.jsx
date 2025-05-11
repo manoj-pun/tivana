@@ -199,7 +199,7 @@ const Sidebar = () => {
               activeNavLink === "profile"
                 ? "text-[#32CD32] font-semibold"
                 : "text-white"}`} onClick={() => handleProfileClick(userData?.username)}>
-            <img src={userData?.profileImage || assets.profile} alt="Profile" className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7"/>
+            <img src={userData?.profileImage || assets.defaultprofile} alt="Profile" className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7"/>
             <p className="max-sm:hidden">{userData?.username}</p>
 
             {/* 

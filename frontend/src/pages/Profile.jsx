@@ -57,7 +57,7 @@ const Profile = () => {
             onClick={() => setShowUploadProfilePicture(true)}
           >
             <img
-              src={profileUser.profileImage || assets.profile}
+              src={profileUser.profileImage || assets.defaultprofile}
               className="w-44 h-44 rounded-full object-cover cursor-pointer"
               alt="Profile"
             />

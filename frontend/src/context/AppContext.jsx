@@ -7,9 +7,23 @@ export const AppContext = createContext();
 export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
+  const [activeNavLink, setActiveNavLink] = useState(localStorage.getItem("activeNavLink") || "home");
+  const [showSearch, setShowSearch] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showSend, setShowSend] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showComment, setShowComment] = useState(false);
+  const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
+  const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [isLoading,setIsLoading] = useState(false);
 
   const getAuthState = async () => {
     try {
@@ -45,20 +59,6 @@ export const AppContextProvider = (props) => {
     getAuthState();
   }, []);
 
-  const [activeNavLink, setActiveNavLink] = useState(localStorage.getItem("activeNavLink") || "home");
-  const [showSearch, setShowSearch] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showSend, setShowSend] = useState(false);
-  const [showFollowers, setShowFollowers] = useState(false);
-  const [showFollowing, setShowFollowing] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [showComment, setShowComment] = useState(false);
-  const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
-  const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
-
   const value = {
     backendUrl,
     isLoggedIn,
@@ -92,6 +92,7 @@ export const AppContextProvider = (props) => {
     setSelectedPost,
     showUploadProfilePicture, 
     setShowUploadProfilePicture,
+    isLoading,setIsLoading
   };
 
   return (

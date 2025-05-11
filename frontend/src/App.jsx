@@ -20,14 +20,16 @@ import { ToastContainer } from "react-toastify";
 import UploadPosts from "./pages/UploadPosts";
 import UploadProfilePicture from "./components/UploadProfilePicture";
 import EditProfile from "./components/EditProfile";
+import Loading from "./components/Loading";
 
 
 const App = () => {
-  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture } = useContext(AppContext);
+  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture,isLoading } = useContext(AppContext);
 
   return (
     <>
       <ToastContainer/>
+      {isLoading && <Loading/>}
 
       {isLoggedIn ? (
         <div className="flex">
