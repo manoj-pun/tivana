@@ -27,11 +27,11 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "No bio yet."
         },
-        following:{
+        followingCount:{
             type: String,
             default: 10,
         },
-        followers:{
+        followersCount:{
             type: String,
             default: 10,
         }

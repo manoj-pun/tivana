@@ -126,8 +126,8 @@ export const getUserData = async (req, res) => {
         username: user.username,
         fullname: user.fullname,
         profileImage:user.profileImage,
-        followers: user.followers,
-        following:user.following,
+        followersCount: user.followersCount,
+        followingCount:user.followingCount,
         userBio:user.userBio
       },
     });
