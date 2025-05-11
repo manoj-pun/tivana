@@ -80,13 +80,13 @@ const Profile = () => {
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowers(true)}
               >
-                {profileSection.followersCount || 0} <span className="text-[#808080]">followers</span>
+                {userData.followersCount || profileSection.followersCount} <span className="text-[#808080]">followers</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowing(true)}
               >
-                {profileSection.followingCount || 0} <span className="text-[#808080]">following</span>
+                {userData.followingCount || profileSection.followingCount} <span className="text-[#808080]">following</span>
               </span>
             </div>
 
