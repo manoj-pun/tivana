@@ -1,7 +1,7 @@
 import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
-export const uploadProfilePicture = async (req, res) => {
+export const uploadProfileImage = async (req, res) => {
   const profileImage = req.file;
 
   if (!profileImage) {
@@ -19,7 +19,7 @@ export const uploadProfilePicture = async (req, res) => {
   try {
     // Find user directly and check
     const user = await userModel.findById(userId);
-    console.log(user)
+    // console.log(user)
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
@@ -44,7 +44,36 @@ export const uploadProfilePicture = async (req, res) => {
 };
 
 
-export const editProfileInfo = async (req, res) => {
+//Remove profile picture
+export const removeProfileImage = async(req,res) => {
+  const userId = req.user.id;
+
+  try{
+    const user = await userModel.findById(userId)
+    if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Delete old image from Cloudinary
+    if (user.profileImage) {
+      const publicId = user.profileImage.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    user.profileImage = "";
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Profile picture removed.",
+    });
+  }catch(error){
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+
+export const editProfile = async (req, res) => {
   const { username, fullname, userBio,profileImage } = req.body;
 
   // Validate required fields
