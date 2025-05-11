@@ -21,6 +21,7 @@ import UploadPosts from "./pages/UploadPosts";
 import UploadProfilePicture from "./components/UploadProfilePicture";
 import EditProfile from "./components/EditProfile";
 import Loading from "./components/Loading";
+import NotFound from "./components/NotFound";
 
 
 const App = () => {
@@ -55,6 +56,9 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/upload-post" element={<UploadPosts/>} />
               <Route path="/edit-profile" element={<EditProfile/>} />
+
+              {/* Handle undefined routes */}
+              <Route path="*" element={<NotFound/>} />
             </Routes>
           </div>
         </div>
