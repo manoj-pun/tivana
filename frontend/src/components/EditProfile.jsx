@@ -10,15 +10,15 @@ const EditProfile = () => {
   const { state } = useLocation();
 
   const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [userBio, setUserBio] = useState("");
   const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
     if (state) {
       setUsername(state.username || "");
-      setName(state.name || "");
-      setBio(state.bio || "");
+      setFullname(state.fullname || "");
+      setUserBio(state.userBio || "");
       setProfileImage(state.profileImage || "");
     }
   }, [state]);
@@ -50,14 +50,14 @@ const EditProfile = () => {
         />
         <input
           type="text"
-          value={name}
+          value={fullname}
           onChange={(e) => setName(e.target.value)}
           className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"
           placeholder="Full Name"
         />
         <textarea
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          value={userBio}
+          onChange={(e) => setUserBio(e.target.value)}
           className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"
           placeholder="Bio"
           rows={3}

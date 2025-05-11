@@ -4,25 +4,28 @@ import { assets, homeData } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Profile = () => {
-  const { 
-    setShowFollowers, 
-    setShowFollowing, 
-    setCurrentUser, 
-    setShowUserUploadedPosts, 
-    setShowUserSavedPosts, 
-    setSelectedPost, 
+  const {
+    setShowFollowers,
+    setShowFollowing,
+    setCurrentUser,
+    setShowUserUploadedPosts,
+    setShowUserSavedPosts,
+    setSelectedPost,
     setShowUploadProfilePicture,
-    userData
+    userData,
+    isLoggedIn,
   } = useContext(AppContext);
-  
+
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("posts");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Find the profile user
-  const profileUser = username === userData?.username
-  ? userData
-  : homeData.find(user => user.username === username);
+  // This is to handle real and dummydata
+  const isOwnProfile = isLoggedIn && username === userData?.username;
+  const profileUser = isOwnProfile
+    ? userData
+    : homeData.find((user) => user.username === username);
 
   // Set current user when profile loads
   React.useEffect(() => {
@@ -37,7 +40,7 @@ const Profile = () => {
 
   // Get profile section data
   const profileSection = profileUser.profileSection || {};
-  
+
   // Handle post click
   const handlePostClick = (post, isSaved = false) => {
     setSelectedPost(post);
@@ -49,7 +52,10 @@ const Profile = () => {
       {/* Profile Header */}
       <div className="border-b-2 pb-8 flex flex-col items-center w-full max-w-4xl">
         <div className="flex gap-16 items-start">
-          <div className="shrink-0" onClick={() => setShowUploadProfilePicture(true)}>
+          <div
+            className="shrink-0"
+            onClick={() => setShowUploadProfilePicture(true)}
+          >
             <img
               src={profileUser.profileImage || assets.profile}
               className="w-44 h-44 rounded-full object-cover cursor-pointer"
@@ -60,37 +66,52 @@ const Profile = () => {
           <div className="flex flex-col gap-y-3 flex-1">
             <div className="flex items-center gap-4 mb-2">
               <span className="text-[18px]">{profileUser.username}</span>
-              <button onClick={() => navigate("/edit-profile", {
-                  state: {
-                  username: profileUser.username,
-                  name: profileUser.name,
-                  bio: profileSection.bio,
-                  profileImage: profileUser.profileImage,
-                },
-              })}  className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer">
+              <button
+                onClick={() =>
+                  navigate("/edit-profile", {
+                    state: {
+                      username: userData.username,
+                      fullname: userData.fullname,
+                      userBio: userData.userBio,
+                      profileImage: userData.profileImage,
+                    },
+                  })
+                }
+                className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
+              >
                 Edit profile
               </button>
             </div>
 
             <div className="flex gap-4 text-sm">
               <span className="font-semibold">
-                {profileSection.postsCount || 0} <span className="text-[#808080]">posts</span>
+                {profileSection.postsCount || 0}{" "}
+                <span className="text-[#808080]">posts</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowers(true)}
               >
-                {userData.followersCount || profileSection.followersCount} <span className="text-[#808080]">followers</span>
+                {userData.followersCount || profileSection.followersCount}{" "}
+                <span className="text-[#808080]">followers</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowing(true)}
               >
-                {userData.followingCount || profileSection.followingCount} <span className="text-[#808080]">following</span>
+                {userData.followingCount || profileSection.followingCount}{" "}
+                <span className="text-[#808080]">following</span>
               </span>
             </div>
 
-            {profileUser.name && (
+            {/* remove the fake data */}
+            {isOwnProfile && userData?.fullname && (
+              <div>
+                <span className="font-semibold">{userData.fullname}</span>
+              </div>
+            )}
+
+            {!isOwnProfile && profileUser.name && (
               <div>
                 <span className="font-semibold">{profileUser.name}</span>
               </div>
@@ -98,7 +119,9 @@ const Profile = () => {
 
             <div className="w-[400px]">
               <p className="text-[14px] leading-relaxed">
-                {profileSection.bio || "No bio yet"}
+                {isOwnProfile
+                  ? userData.userBio
+                  : profileSection.bio || "No bio yet."}
               </p>
             </div>
           </div>
@@ -118,7 +141,13 @@ const Profile = () => {
             className="w-4 h-4 inline-block"
             alt="Posts"
           />
-          <p className={activeTab === "posts" ? "text-[#32CD32] text-[13px] font-semibold" : "text-white text-[13px]"}>
+          <p
+            className={
+              activeTab === "posts"
+                ? "text-[#32CD32] text-[13px] font-semibold"
+                : "text-white text-[13px]"
+            }
+          >
             POSTS
           </p>
         </div>
@@ -134,7 +163,13 @@ const Profile = () => {
             className="w-4 h-4 inline-block"
             alt="Saved"
           />
-          <p className={activeTab === "saved" ? "text-[#32CD32] text-[13px] font-semibold" : "text-white text-[13px]"}>
+          <p
+            className={
+              activeTab === "saved"
+                ? "text-[#32CD32] text-[13px] font-semibold"
+                : "text-white text-[13px]"
+            }
+          >
             SAVED
           </p>
         </div>
@@ -179,7 +214,9 @@ const Profile = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-10 text-gray-400">No saved posts yet</div>
+          <div className="text-center py-10 text-gray-400">
+            No saved posts yet
+          </div>
         )}
       </div>
     </div>
