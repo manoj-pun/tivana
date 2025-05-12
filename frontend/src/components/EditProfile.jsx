@@ -6,23 +6,28 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditProfile = () => {
-  const { setShowUploadProfilePicture, setIsLoading, backendUrl } =
-    useContext(AppContext);
+  const {
+    setShowUploadProfilePicture,
+    setIsLoading,
+    backendUrl,
+    userData,
+    setUserData,
+  } = useContext(AppContext);
 
+  //useLocation gets any data passed when navigating to this page
   const { state } = useLocation();
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [fullname, setFullname] = useState("");
   const [userBio, setUserBio] = useState("");
-  const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
     if (state) {
       setUsername(state.username || "");
       setFullname(state.fullname || "");
       setUserBio(state.userBio || "");
-      setProfileImage(state.profileImage || "");
     }
   }, [state]);
 
@@ -35,11 +40,22 @@ const EditProfile = () => {
         username,
         fullname,
         userBio,
-        profileImage,
+        profileImage: userData.profileImage,
+      });
+
+      // Update the global user data with the new values from the server
+      setUserData({
+        ...userData,
+        username: data.user.username,
+        fullname: data.user.fullname,
+        userBio: data.user.userBio,
+        profileImage: data.user.profileImage,
       });
 
       // Only reached if status is 200 OK
       toast.success(data.message);
+
+      //go back after submitting the form
       navigate(-1);
     } catch (error) {
       if (error.response && error.response.data?.message) {
@@ -53,46 +69,31 @@ const EditProfile = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col items-center mt-14 gap-6 p-6 bg-zinc-900 rounded-xl shadow-md max-w-md mx-auto"
-    >
-      <img
-        onClick={() => setShowUploadProfilePicture(true)}
-        src={profileImage || assets.defaultprofile}
-        alt="Profile"
-        className="w-32 h-32 rounded-full object-cover cursor-pointer"
-      />
+    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-14 gap-6 p-6 bg-zinc-900 rounded-xl shadow-md max-w-md mx-auto">
+      <img src={assets.cross_icon} onClick={() => navigate(-1)} className="absolute top-15 right-50 w-5 h-5 cursor-pointer hover:scale-110 transition"/>
+
+      <img onClick={() => setShowUploadProfilePicture(true)} src={userData?.profileImage || assets.defaultprofile}
+        className="w-32 h-32 rounded-full object-cover cursor-pointer"/>
 
       <div className="w-full flex flex-col gap-4 text-white">
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"
-          placeholder="Username"
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"placeholder="Username"
         />
-        <input
-          type="text"
-          value={fullname}
-          onChange={(e) => setFullname(e.target.value)}
-          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"
-          placeholder="Full Name"
+
+        <input type="text" value={fullname} onChange={(e) => setFullname(e.target.value)}
+          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white" placeholder="Full Name"
         />
-        <textarea
-          value={userBio}
-          onChange={(e) => setUserBio(e.target.value)}
-          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white"
-          placeholder="Bio"
+
+        <textarea value={userBio} onChange={(e) => setUserBio(e.target.value)}
+          className="p-2 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 border-2 border-zinc-900 hover:border-[#32CD32] transition duration-200 bg-black text-white" placeholder="Bio"
           rows={3}
         />
+
       </div>
 
       <div className="w-full flex justify-end">
-        <button
-          type="submit"
-          className="text-white bg-green-500 p-2 px-15 font-medium text-lg rounded hover:bg-green-600 transition-all cursor-pointer"
-        >
+        <button type="submit"
+          className="text-white bg-green-500 p-2 px-15 font-medium text-lg rounded hover:bg-green-600 transition-all cursor-pointer">
           Submit
         </button>
       </div>
