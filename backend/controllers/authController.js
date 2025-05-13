@@ -1,21 +1,15 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { validateRegisterInput } from "../utils/authValidate.js";
+import { validateLoginInput } from "../utils/authValidate.js";
 
 export const registerUser = async (req, res) => {
   const { username, fullname, email, password } = req.body;
 
-  if (!username || !fullname || !email || !password) {
-    return res.json({ success: false, message: "All the fields are required" });
-  }
-
-  const usernameRegex = /^[a-z]+[a-z0-9]*$/;
-  if (!usernameRegex.test(username)) {
-    return res.json({
-      success: false,
-      message:
-        "Username must start with lowercase letters and may contain numbers only after letters. No symbols allowed.",
-    });
+  const validationError = validateRegisterInput({ username, fullname, email, password });
+  if (validationError) {
+    return res.json({ success: false, message: validationError });
   }
 
   try {
@@ -63,11 +57,9 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.json({
-      success: false,
-      message: "Email and password are required",
-    });
+  const validationError = validateLoginInput({ email, password });
+  if (validationError) {
+    return res.json({ success: false, message: validationError });
   }
 
   try {
