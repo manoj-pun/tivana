@@ -31,12 +31,14 @@ export const uploadProfileImage = async (req, res) => {
 
     // Update user document
     user.profileImage = result.secure_url;
+    user.profilePublicId = result.public_id;
     await user.save();
 
     return res.json({
       success: true,
       message: "Profile picture uploaded successfully.",
-      profileImage: user.profileImage
+      profileImage: user.profileImage,
+      profilePublicId: user.profilePublicId
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -55,9 +57,8 @@ export const removeProfileImage = async(req,res) => {
     }
 
     // Delete old image from Cloudinary
-    if (user.profileImage) {
-      const publicId = user.profileImage.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(publicId);
+    if (user.profilePublicId) {
+      await cloudinary.uploader.destroy(user.profilePublicId);
     }
 
     user.profileImage = "";
