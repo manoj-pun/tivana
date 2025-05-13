@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
         profileImage: {
             type: String,
         },
+        profilePublicId: {
+            type: String, 
+            required: true
+        },
         userBio:{
             type: String,
             default: "No bio yet."

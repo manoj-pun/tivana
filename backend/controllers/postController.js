@@ -2,6 +2,7 @@ import postModel from "../models/postModel.js";
 import userModel from "../models/userModel.js";
 import { v2 as cloudinary } from 'cloudinary';
 
+//Upload post 
 export const uploadPost = async (req, res) => {
     const { description } = req.body;
     const thumbnailImage = req.file;
@@ -28,7 +29,7 @@ export const uploadPost = async (req, res) => {
 
         // Upload thumbnail image to Cloudinary
         const result = await cloudinary.uploader.upload(thumbnailImage.path, {
-            folder: "posts",
+            folder: `tivana/users/${user.username}/profileInfo/UserProfileThumbnail`
         });
 
         const newPost = await postModel.create({
@@ -46,6 +47,8 @@ export const uploadPost = async (req, res) => {
 };
 
 
+
+//get all the posts
 export const getAllPosts = async (req, res) => {
     try {
         const posts = await postModel
@@ -60,6 +63,8 @@ export const getAllPosts = async (req, res) => {
 };
 
 
+
+//get post by id
 export const getPostById = async (req, res) => {
     const { id } = req.params;
 
@@ -73,6 +78,34 @@ export const getPostById = async (req, res) => {
         }
 
         res.status(200).json({ success: true, post });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
+
+//delete post 
+export const deletePost = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const post = await postModel.findById(id);
+
+        if (!post) {
+            return res.status(404).json({ success: false, message: "Post not found." });
+        }
+
+        // Delete thumbnail from Cloudinary
+        if (post.thumbnailPublicId) {
+            await cloudinary.uploader.destroy(post.thumbnailPublicId);
+        }
+
+        // console.log("Cloudinary Public ID:", post.thumbnailPublicId);
+
+        await postModel.findByIdAndDelete(id);
+
+        res.status(200).json({ success: true, message: "Post deleted successfully." });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

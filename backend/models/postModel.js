@@ -10,6 +10,10 @@ const postSchema = mongoose.Schema({
         type: String,
         required:true
     },
+    thumbnailPublicId: {//To remove the post from coudinary
+        type: String, 
+        required: true
+    },
     description:{
         type: String,
         required: true
