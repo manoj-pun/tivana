@@ -60,4 +60,24 @@ export const getAllPosts = async (req, res) => {
 };
 
 
+export const getPostById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const post = await postModel
+            .findById(id)
+            .populate("userId", "fullname username profileImage"); // populate user info (optional)
+
+        if (!post) {
+            return res.status(404).json({ success: false, message: "Post not found." });
+        }
+
+        res.status(200).json({ success: true, post });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
+
 
