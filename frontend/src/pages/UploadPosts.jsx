@@ -3,9 +3,11 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const UploadPosts = () => {
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, setIsLoading } = useContext(AppContext);
+  const navigate = useNavigate()
 
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
@@ -117,6 +119,9 @@ const UploadPosts = () => {
     }
 
     try {
+
+      setIsLoading(true)
+
       const formData = new FormData();
       formData.append("description", description);
       formData.append("thumbnailImage", thumbnailFile);
@@ -142,25 +147,28 @@ const UploadPosts = () => {
       );
 
       toast.success(data.message);
+      navigate("/home")
 
       // Reset form
-      setThumbnail(null);
-      setThumbnailFile(null);
-      setDescription("");
-      setDropdowns([]);
-      setCurrentImageIndices({});
+      // setThumbnail(null);
+      // setThumbnailFile(null);
+      // setDescription("");
+      // setDropdowns([]);
+      // setCurrentImageIndices({});
 
-      document.getElementById("file-input").value = "";
-      fileInputRefs.current.forEach((ref) => {
-        if (ref?.current) ref.current.value = "";
-      });
-      fileInputRefs.current = [];
+      // document.getElementById("file-input").value = "";
+      // fileInputRefs.current.forEach((ref) => {
+      //   if (ref?.current) ref.current.value = "";
+      // });
+      // fileInputRefs.current = [];
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
         toast.error(error.message || "Failed to upload post");
       }
+    }finally{
+      setIsLoading(false)
     }
   };
 

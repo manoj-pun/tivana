@@ -7,7 +7,9 @@ export const AppContext = createContext();
 export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
-  const [activeNavLink, setActiveNavLink] = useState(localStorage.getItem("activeNavLink") || "home");
+  const [activeNavLink, setActiveNavLink] = useState(
+    localStorage.getItem("activeNavLink") || "home"
+  );
   const [showSearch, setShowSearch] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -19,18 +21,20 @@ export const AppContextProvider = (props) => {
   const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
   const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
+  const [showUploadProfilePicture, setShowUploadProfilePicture] =
+    useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [postData, setPostData] = useState(null);
 
   const getAuthState = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/auth/is-auth");
       if (data.success) {
         setIsLoggedIn(true);
-        await getUserData(); 
+        await getUserData();
       } else {
         setIsLoggedIn(false);
       }
@@ -58,6 +62,26 @@ export const AppContextProvider = (props) => {
   useEffect(() => {
     getAuthState();
   }, []);
+
+  const getPostdata = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
+      console.log(data)
+      if (data.success) {
+        setPostData(data.posts);
+      } else {
+        toast.error("Failed to fetch posts");
+      }
+    } catch (error) {
+      toast.error("Error fetching posts");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+  getPostdata();
+}, []);
+
 
   const value = {
     backendUrl,
@@ -90,14 +114,15 @@ export const AppContextProvider = (props) => {
     setShowUserSavedPosts,
     selectedPost,
     setSelectedPost,
-    showUploadProfilePicture, 
+    showUploadProfilePicture,
     setShowUploadProfilePicture,
-    isLoading,setIsLoading
+    isLoading,
+    setIsLoading,
+    postData,setPostData,
+    getPostdata
   };
 
   return (
-    <AppContext.Provider value={value}>
-      {props.children}
-    </AppContext.Provider>
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };
