@@ -195,7 +195,14 @@ const Profile = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 text-gray-400">No posts yet</div>
+            <>
+              <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+                <img onClick={() => navigate("/upload-post")} src={assets.Upload} alt="No posts" className="w-20 mb-4 cursor-pointer" />
+                <div>When you share posts, they will appear on your profile.</div>
+
+                <p className="mt-4 text-[#4193EF] text-xl font-semibold cursor-pointer" onClick={() => navigate("/upload-post")} >Share your first post</p>
+              </div>
+            </>
           )
         ) : profileUser.savedPosts && profileUser.savedPosts.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
@@ -215,7 +222,7 @@ const Profile = () => {
           </div>
         ) : (
           <div className="text-center py-10 text-gray-400">
-            No saved posts yet
+            When you save posts, they will appear here.
           </div>
         )}
       </div>
