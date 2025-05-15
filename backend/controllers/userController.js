@@ -5,46 +5,54 @@ export const uploadProfileImage = async (req, res) => {
   const profileImage = req.file;
 
   if (!profileImage) {
-    return res.status(400).json({
-      success: false,
-      message: "Please select a profile picture.",
-    });
+    return res.status(400).json({success: false,message: "Please select a profile picture.",});
   }
 
   const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ success: false, message: "User not authorized" });
+  if (!userId) {return res.status(401).json({ success: false, message: "User not authorized" });
   }
 
   try {
-    // Find user directly and check
     const user = await userModel.findById(userId);
-    // console.log(user)
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    if (!user) {return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(profileImage.path, {
-      folder: `tivana/users/${user.username}/profileInfo/UserProfileImage`,
-    });
+    // Delete old image if exists
+    if (user.profilePublicId) {
+      await cloudinary.uploader.destroy(user.profilePublicId)
+        .catch(err => console.error("Error deleting old image:", err));
+    }
+
+    // Upload new image to Cloudinary
+    const result = await cloudinary.uploader.upload(
+      `data:${profileImage.mimetype};base64,${profileImage.buffer.toString('base64')}`,
+      {
+        folder: `tivana/users/${user.username}/profileInfo/UserProfileImage`,
+        width: 500,
+        height: 500,
+        crop: "fill"
+      }
+    );
 
     // Update user document
     user.profileImage = result.secure_url;
     user.profilePublicId = result.public_id;
     await user.save();
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "Profile picture uploaded successfully.",
-      profileImage: user.profileImage,
-      profilePublicId: user.profilePublicId
+      profileImage: user.profileImage
     });
   } catch (error) {
+    // console.error("Upload error:", error);
+    // return res.status(500).json({ 
+    //   success: false, 
+    //   message: "Failed to upload profile image" 
+    // });
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 //Remove profile picture
 export const removeProfileImage = async(req,res) => {
@@ -75,7 +83,8 @@ export const removeProfileImage = async(req,res) => {
 
 
 export const editProfile = async (req, res) => {
-  const { username, fullname, userBio,profileImage } = req.body;
+  const { username, fullname, userBio } = req.body;
+  const profileImage = req.file; 
 
   // Validate required fields
   if (!username || username.trim() === "") {
@@ -92,34 +101,53 @@ export const editProfile = async (req, res) => {
   }
 
   try {
-    // Check if user exists
     const user = await userModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" }); // 404 for not found
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Check if username is already taken by another user
+    // Check username availability
     if (username !== user.username) {
-      const usernameExists = await userModel.findOne({ username });
-      if (usernameExists) {
-        return res.status(409).json({ success: false, message: "Username already taken." }); // 409 for conflict
+      const exists = await userModel.findOne({ username });
+      if (exists) {
+        return res.status(409).json({ success: false, message: "Username already taken." });
       }
     }
 
-    user.username = username;
-    user.fullname = fullname;
-    user.userBio = userBio?.trim() === "" ? "No bio yet." : userBio;
-    if (profileImage) { 
-      user.profileImage = profileImage;
+    // Handle profile image if uploaded
+    if (profileImage) {
+      // Delete old image
+      if (user.profilePublicId) {
+        await cloudinary.uploader.destroy(user.profilePublicId)
+          .catch(console.error);
+      }
+
+      // Upload new image
+      const result = await cloudinary.uploader.upload(
+        `data:${profileImage.mimetype};base64,${profileImage.buffer.toString('base64')}`,
+        {
+          folder: `tivana/users/${user.username}/profileInfo/UserProfileImage`,
+          width: 500,
+          height: 500,
+          crop: "fill"
+        }
+      );
+
+      user.profileImage = result.secure_url;
+      user.profilePublicId = result.public_id;
     }
 
+    // Update other fields
+    user.username = username;
+    user.fullname = fullname;
+    user.userBio = userBio || "No bio yet.";
+    
     await user.save();
 
     return res.status(200).json({
       success: true,
-      message: "Profile updated successfully",
+      message: "Profile updated",
       user: {
-        id: user._id,
         username: user.username,
         fullname: user.fullname,
         userBio: user.userBio,
@@ -128,11 +156,10 @@ export const editProfile = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error updating profile:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: error.message
+    console.error("Edit error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Server error" 
     });
   }
 };

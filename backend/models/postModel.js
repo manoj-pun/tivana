@@ -1,46 +1,31 @@
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema({
-    userId:{
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
     thumbnail: {
         type: String,
-        required:true
+        required: true
     },
-    thumbnailPublicId: {//To remove the post from coudinary
+    thumbnailPublicId: { //To remove post from cloudinary
         type: String, 
         required: true
     },
-    description:{
+    description: {
         type: String,
         required: true
     },
-    // dropdowns:[{
-    //     title: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     subTitle: {
-    //         type: String,
-    //     },
-    //     dropdownImages:[{
-    //         type: String,
-    //         required: true
-    //     }],
-    //     description: {
-    //         type: String,
-    //         required: true
-    //     }
-    // }]
-    },
-    {
-        timestamps:true,
-    }
-);
+    dropdowns: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Dropdown"
+    }]
+}, {
+    timestamps: true,
+});
 
-const postModel = mongoose.model("Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
 
-export default postModel;
+export default Post;
