@@ -91,6 +91,7 @@ export const getAllPosts = async (req, res) => {
     const posts = await postModel
       .find()
       .populate("userId", "fullname username profileImage")
+      .populate("dropdowns") // Add this line to populate dropdowns
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, posts });
