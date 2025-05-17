@@ -1,10 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import { assets, fakeComments } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Comment = ({ isModal = true }) => {
 
   const {setShowComment} = useContext(AppContext)
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -12,6 +14,14 @@ const Comment = ({ isModal = true }) => {
       document.body.style.overflow = "unset";
     };
   }, []);
+
+  const toggleLike = () => {
+    setLiked(prev => !prev);
+  };
+
+  const toggleSave = () => {
+  setSaved(prev => !prev);
+};
 
   return (
     <div
@@ -80,16 +90,26 @@ const Comment = ({ isModal = true }) => {
         {/* Actions */}
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-3">
-            <img
-              src={assets.heart}
-              alt="Like"
-              className="w-6 h-6 cursor-pointer"
-            />
-            <img
+            {liked ? (
+                      <img
+                        src={assets.heartFilled}
+                        className="w-6 h-6 cursor-pointer"
+                        onClick={toggleLike}
+                        alt="Unlike"
+                      />
+                    ) : (
+                      <img
+                        src={assets.heart}
+                        className="w-6 h-6 cursor-pointer"
+                        onClick={toggleLike}
+                        alt="Like"
+                      />
+                    )}
+            {/* <img
               src={assets.comment}
               alt="Comment"
               className="w-6 h-6 cursor-pointer"
-            />
+            /> */}
             <img
               src={assets.send}
               alt="Send"
@@ -97,11 +117,21 @@ const Comment = ({ isModal = true }) => {
             />
           </div>
           <div>
-            <img
-              src={assets.save}
-              alt="Save"
-              className="w-6 h-6 cursor-pointer"
-            />
+            {saved ? (
+              <img
+                src={assets.saveFilled}
+                alt="Unsave"
+                className="w-6 h-6 cursor-pointer"
+                onClick={toggleSave}
+              />
+            ) : (
+              <img
+                src={assets.save}
+                alt="Save"
+                className="w-6 h-6 cursor-pointer"
+                onClick={toggleSave}
+              />
+            )}
           </div>
         </div>
 

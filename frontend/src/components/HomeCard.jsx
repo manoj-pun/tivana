@@ -18,6 +18,8 @@ const HomeCard = () => {
   
   const navigate = useNavigate();
   const [showDropdownMap, setShowDropdownMap] = useState({});
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const toggleDropdown = (postId) => {
     setShowDropdownMap((prev) => ({
@@ -25,6 +27,15 @@ const HomeCard = () => {
       [postId]: !prev[postId],
     }));
   };
+
+  const toggleLike = () => {
+    setLiked(prev => !prev);
+  };
+
+  const toggleSave = () => {
+  setSaved(prev => !prev);
+};
+
 
   if (isLoading) {
     return <Loading />;
@@ -82,7 +93,21 @@ const HomeCard = () => {
           {/* Icons */}
           <div className="flex items-center justify-between mt-3 mb-2">
             <div className="flex gap-4">
-              <img src={assets.heart} className="w-6 h-6 cursor-pointer" />
+              {liked ? (
+          <img
+            src={assets.heartFilled}
+            className="w-6 h-6 cursor-pointer"
+            onClick={toggleLike}
+            alt="Unlike"
+          />
+        ) : (
+          <img
+            src={assets.heart}
+            className="w-6 h-6 cursor-pointer"
+            onClick={toggleLike}
+            alt="Like"
+          />
+        )}
               <img
                 src={assets.comment}
                 className="w-[23px] h-[23px] cursor-pointer"
@@ -95,11 +120,22 @@ const HomeCard = () => {
                 onClick={() => setShowSend(true)}
               />
             </div>
-            <img
-              src={assets.save}
-              alt="save"
-              className="w-6 h-6 cursor-pointer"
-            />
+            {saved ? (
+  <img
+    src={assets.saveFilled}
+    alt="Unsave"
+    className="w-6 h-6 cursor-pointer"
+    onClick={toggleSave}
+  />
+) : (
+  <img
+    src={assets.save}
+    alt="Save"
+    className="w-6 h-6 cursor-pointer"
+    onClick={toggleSave}
+  />
+)}
+
           </div>
 
           {/* Info + Inline Toggle */}

@@ -66,23 +66,24 @@ export const AppContextProvider = (props) => {
   try {
     setIsLoading(true);
     const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
-    console.log(data)
+    // console.log(data)
     if (data.success) {
       setPostData(data.posts)
     } else {
       toast.error("Failed to fetch posts");
     }
   } catch (error) {
-    toast.error("Error fetching posts");
-    console.error(error);
+    toast.error(error.message);
   } finally {
     setIsLoading(false);
   }
 };
 
 useEffect(() => {
-  getPostdata();
-}, []);
+  if (isLoggedIn) {
+    getPostdata();
+  }
+}, [isLoggedIn]);
 
   const value = {
     backendUrl,
