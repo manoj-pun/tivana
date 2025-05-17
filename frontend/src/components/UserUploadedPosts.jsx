@@ -66,9 +66,7 @@ const UserUploadedPosts = () => {
           <div className="flex-1 overflow-hidden">
             {/* Comments Section */}
             <div
-              className={`h-full ${
-                activeTab === "comments" ? "block" : "hidden"
-              }`}
+              className={`h-full ${activeTab === "comments" ? "block" : "hidden"}`}
             >
               <div className="h-full overflow-y-auto">
                 <Comment isModal={false} />
@@ -77,29 +75,29 @@ const UserUploadedPosts = () => {
 
             {/* Dropdowns Section */}
             <div
-              className={`h-full ${
+              className={`h-full flex flex-col ${
                 activeTab === "dropdowns" ? "block" : "hidden"
               }`}
             >
-              {postDetails?.description ||
-              postDetails?.dropdowns?.length > 0 ? (
-                <>
-                  {postDetails?.description && (
-                    <p className="text-white p-2">{postDetails.description}</p>
-                  )}
-                  {postDetails?.dropdowns?.length > 0 ? (
-                    <Dropdown dropdowns={postDetails.dropdowns} />
-                  ) : (
-                    <div className="h-full flex items-center justify-center text-gray-400">
-                      No dropdowns available
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="h-full flex items-center justify-center text-gray-400">
-                  No details available
+              {/* Sticky Post Description */}
+              {postDetails?.description && (
+                <div className="sticky top-0 bg-[#1a1a1a] z-10 p-2">
+                  <p className="text-white">{postDetails.description}</p>
                 </div>
               )}
+
+              {/* Scrollable Dropdowns */}
+              <div className="flex-1 overflow-y-auto">
+                {postDetails?.dropdowns?.length > 0 ? (
+                  <Dropdown dropdowns={postDetails.dropdowns} />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-gray-400">
+                    {postDetails?.description
+                      ? "No dropdowns available"
+                      : "No details available"}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
