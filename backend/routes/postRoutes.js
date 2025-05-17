@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post("/upload-post",userAuth,upload.fields([
     { name: "thumbnailImage", maxCount: 1 },
-    { name: "dropdownImages", maxCount: 20 }
+    { name: "dropdownImages", maxCount: 100 }
   ]),uploadPost);
 router.get("/get-all-posts",userAuth,getAllPosts)
 router.get("/:id",userAuth,getPostById)
