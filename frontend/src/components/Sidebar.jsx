@@ -87,12 +87,12 @@ const Sidebar = () => {
       <div className="inline-block min-h-screen border-r-[#262626] border-r-1 w-[250px] max-sm:w-[70px]">
         <ul className="flex flex-col items-start p-2 space-y-2">
           <div className="flex items-center p-3 max-sm:p-0 max-sm:flex max-sm:justify-center gap-2 w-full mt-6 mb-2 h-20">
-            <img
+            <img onClick={() => navigate("/home")}
               src={assets.logo}
               alt=""
               className="w-10 h-8 sm:hidden rounded cursor-pointer"
             />
-            <p className="max-sm:hidden pl-12 font-serif italic text-2xl cursor-pointer text-white">
+            <p onClick={() => navigate("/home")} className="max-sm:hidden pl-12 font-serif italic text-2xl cursor-pointer text-white">
               Tivana
             </p>
           </div>
