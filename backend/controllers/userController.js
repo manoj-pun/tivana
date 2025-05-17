@@ -193,29 +193,25 @@ export const getUserData = async (req, res) => {
   }
 };
 
-// export const getUserProfile = async (req, res) => {
-//   try {
-//     const { username } = req.params;
-//     const userId = req.user?.id; // Optional for auth check
 
-//     // Get only the essential profile data
-//     const user = await userModel
-//       .findOne({ username })
-//       .select("username fullname profileImage");
+export const getUserByUsername = async (req, res) => {
+  const { username } = req.params;
 
-//     if (!user) {
-//       return res.json({ success: false, message: "User not found" });
-//     }
+  try {
+    const user = await userModel.findOne({ username })
 
-//     res.json({
-//       success: true,
-//       user: {
-//         username: user.username,
-//         name: user.fullname, 
-//         profileImage: user.profileImage
-//       },
-//     });
-//   } catch (error) {
-//     res.json({ success: false, message: error.message });
-//   }
-// };
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+

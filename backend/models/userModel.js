@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
         },
         profilePublicId: {
             type: String, 
-            required: true
+            // required: true
         },
         userBio:{
             type: String,
