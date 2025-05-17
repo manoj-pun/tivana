@@ -53,7 +53,6 @@ const App = () => {
               <Route path="/explore" element={<Explore />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/:username" element={<Profile />} />
-              <Route path="/profile" element={<Profile />} />
               <Route path="/upload-post" element={<UploadPosts/>} />
               <Route path="/edit-profile" element={<EditProfile/>} />
 

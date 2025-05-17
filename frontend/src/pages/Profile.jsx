@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { assets, homeData } from "../assets/assets";
+import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
 
 const Profile = () => {
   const {
@@ -13,115 +14,138 @@ const Profile = () => {
     setSelectedPost,
     setShowUploadProfilePicture,
     userData,
-    isLoggedIn,
+    postData,
+    backendUrl,
   } = useContext(AppContext);
 
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
+  const [profileData, setProfileData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Find the profile user
-  // This is to handle real and dummydata
-  const isOwnProfile = isLoggedIn && username === userData?.username;
-  const profileUser = isOwnProfile
-    ? userData
-    : homeData.find((user) => user.username === username);
+  // Fetch profile data when username changes
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(`${backendUrl}/api/user/${username}`);
+        
+        if (data) {
+          setProfileData(data);
+          // If viewing own profile, update current user
+          if (userData && userData.username === username) {
+            setCurrentUser(data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Set current user when profile loads
-  React.useEffect(() => {
-    if (profileUser) {
-      setCurrentUser(profileUser);
-    }
-  }, [profileUser, setCurrentUser]);
+    fetchProfileData();
+  }, [username, userData, setCurrentUser, backendUrl]);
 
-  if (!profileUser) {
+  if (isLoading) {
+    return <div className="text-white text-center pt-10">Loading...</div>;
+  }
+
+  if (!profileData) {
     return <div className="text-white text-center pt-10">User not found</div>;
   }
 
-  // Get profile section data
-  const profileSection = profileUser.profileSection || {};
+  const isCurrentUser = userData && userData.username === username;
+  const profileSection = profileData.profileSection || {};
 
-  // Handle post click
   const handlePostClick = (post, isSaved = false) => {
     setSelectedPost(post);
     isSaved ? setShowUserSavedPosts(true) : setShowUserUploadedPosts(true);
   };
+
+  const userPosts = postData?.filter(post => post.userId?.username === username) || [];
 
   return (
     <div className="text-white pt-10 flex flex-col items-center">
       {/* Profile Header */}
       <div className="border-b-2 pb-8 flex flex-col items-center w-full max-w-4xl">
         <div className="flex gap-16 items-start">
-          <div
-            className="shrink-0"
-            onClick={() => setShowUploadProfilePicture(true)}
-          >
-            <img
-              src={profileUser.profileImage || assets.defaultprofile}
-              className="w-44 h-44 rounded-full object-cover cursor-pointer"
-              alt="Profile"
-            />
+          <div className="shrink-0">
+            {/* Only make profile image clickable for current user */}
+            {isCurrentUser ? (
+              <div onClick={() => setShowUploadProfilePicture(true)}>
+                <img
+                  src={profileData.profileImage || assets.defaultprofile}
+                  className="w-44 h-44 rounded-full object-cover cursor-pointer"
+                  alt="Profile"
+                />
+              </div>
+            ) : (
+              <img
+                src={profileData.profileImage || assets.defaultprofile}
+                className="w-44 h-44 rounded-full object-cover"
+                alt="Profile"
+              />
+            )}
           </div>
 
           <div className="flex flex-col gap-y-3 flex-1">
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-[18px]">{profileUser.username}</span>
-              <button
-                onClick={() =>
-                  navigate("/edit-profile", {
-                    state: {
-                      username: userData.username,
-                      fullname: userData.fullname,
-                      userBio: userData.userBio,
-                      profileImage: userData.profileImage,
-                    },
-                  })
-                }
-                className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
-              >
-                Edit profile
-              </button>
+              <span className="text-[18px]">{profileData.username}</span>
+              {isCurrentUser ? (
+                <button
+                  onClick={() =>
+                    navigate("/edit-profile", {
+                      state: {
+                        username: profileData.username,
+                        fullname: profileData.fullname,
+                        userBio: profileData.userBio,
+                        profileImage: profileData.profileImage,
+                      },
+                    })
+                  }
+                  className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
+                >
+                  Edit profile
+                </button>
+              ) : (
+                <button className="bg-[#334fda] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer">
+                  Follow
+                </button>
+              )}
             </div>
 
             <div className="flex gap-4 text-sm">
               <span className="font-semibold">
-                {profileSection.postsCount || 0}{" "}
+                {userPosts.length}{" "}
                 <span className="text-[#808080]">posts</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowers(true)}
               >
-                {userData.followersCount || profileSection.followersCount}{" "}
+                {profileData.followersCount || 0}{" "}
                 <span className="text-[#808080]">followers</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
                 onClick={() => setShowFollowing(true)}
               >
-                {userData.followingCount || profileSection.followingCount}{" "}
+                {profileData.followingCount || 0}{" "}
                 <span className="text-[#808080]">following</span>
               </span>
             </div>
 
-            {/* remove the fake data */}
-            {isOwnProfile && userData?.fullname && (
+            {profileData?.fullname && (
               <div>
-                <span className="font-semibold">{userData.fullname}</span>
-              </div>
-            )}
-
-            {!isOwnProfile && profileUser.name && (
-              <div>
-                <span className="font-semibold">{profileUser.name}</span>
+                <span className="font-semibold">{profileData.fullname}</span>
               </div>
             )}
 
             <div className="w-[400px]">
               <p className="text-[14px] leading-relaxed">
-                {isOwnProfile
-                  ? userData.userBio
-                  : profileSection.bio || "No bio yet."}
+                {profileData.userBio || "No bio yet."}
               </p>
             </div>
           </div>
@@ -152,41 +176,43 @@ const Profile = () => {
           </p>
         </div>
 
-        <div
-          className={`flex gap-1 cursor-pointer items-center pb-2 ${
-            activeTab === "saved" ? "border-b border-[#32CD32]" : ""
-          }`}
-          onClick={() => setActiveTab("saved")}
-        >
-          <img
-            src={activeTab === "saved" ? assets.saveFilled : assets.save}
-            className="w-4 h-4 inline-block"
-            alt="Saved"
-          />
-          <p
-            className={
-              activeTab === "saved"
-                ? "text-[#32CD32] text-[13px] font-semibold"
-                : "text-white text-[13px]"
-            }
+        {isCurrentUser && (
+          <div
+            className={`flex gap-1 cursor-pointer items-center pb-2 ${
+              activeTab === "saved" ? "border-b border-[#32CD32]" : ""
+            }`}
+            onClick={() => setActiveTab("saved")}
           >
-            SAVED
-          </p>
-        </div>
+            <img
+              src={activeTab === "saved" ? assets.saveFilled : assets.save}
+              className="w-4 h-4 inline-block"
+              alt="Saved"
+            />
+            <p
+              className={
+                activeTab === "saved"
+                  ? "text-[#32CD32] text-[13px] font-semibold"
+                  : "text-white text-[13px]"
+              }
+            >
+              SAVED
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Content Section */}
       <div className="mt-8 w-full max-w-4xl px-4">
         {activeTab === "posts" ? (
-          profileUser.userPosts && profileUser.userPosts.length > 0 ? (
+          userPosts.length > 0 ? (
             <div className="grid grid-cols-3 gap-4">
-              {profileUser.userPosts.map((post, index) => (
+              {userPosts.map((post, index) => (
                 <div
                   key={index}
                   className="w-full aspect-square bg-gray-800 rounded-lg cursor-pointer overflow-hidden"
                 >
                   <img
-                    src={post}
+                    src={post.thumbnail}
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     onClick={() => handlePostClick(post)}
                     alt={`Post ${index}`}
@@ -195,18 +221,31 @@ const Profile = () => {
               ))}
             </div>
           ) : (
-            <>
-              <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-                <img onClick={() => navigate("/upload-post")} src={assets.Upload} alt="No posts" className="w-20 mb-4 cursor-pointer" />
-                <div>When you share posts, they will appear on your profile.</div>
-
-                <p className="mt-4 text-[#4193EF] text-xl font-semibold cursor-pointer" onClick={() => navigate("/upload-post")} >Share your first post</p>
-              </div>
-            </>
+            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+              {isCurrentUser ? (
+                <>
+                  <img
+                    onClick={() => navigate("/upload-post")}
+                    src={assets.Upload}
+                    alt="No posts"
+                    className="w-20 mb-4 cursor-pointer"
+                  />
+                  <div>When you share posts, they will appear on your profile.</div>
+                  <p
+                    className="mt-4 text-[#4193EF] text-xl font-semibold cursor-pointer"
+                    onClick={() => navigate("/upload-post")}
+                  >
+                    Share your first post
+                  </p>
+                </>
+              ) : (
+                <div>This user hasn't posted anything yet.</div>
+              )}
+            </div>
           )
-        ) : profileUser.savedPosts && profileUser.savedPosts.length > 0 ? (
+        ) : isCurrentUser && profileData.savedPosts && profileData.savedPosts.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
-            {profileUser.savedPosts.map((post, index) => (
+            {profileData.savedPosts.map((post, index) => (
               <div
                 key={index}
                 className="w-full aspect-square bg-gray-800 rounded-lg cursor-pointer overflow-hidden"
@@ -222,7 +261,9 @@ const Profile = () => {
           </div>
         ) : (
           <div className="text-center py-10 text-gray-400">
-            When you save posts, they will appear here.
+            {isCurrentUser
+              ? "When you save posts, they will appear here."
+              : ""}
           </div>
         )}
       </div>

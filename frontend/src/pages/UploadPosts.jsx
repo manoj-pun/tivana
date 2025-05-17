@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const UploadPosts = () => {
-  const { backendUrl, setIsLoading } = useContext(AppContext);
+  const { backendUrl, setIsLoading,userData,getPostdata } = useContext(AppContext);
   const navigate = useNavigate()
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -147,20 +147,9 @@ const UploadPosts = () => {
       );
 
       toast.success(data.message);
-      navigate("/home")
 
-      // Reset form
-      // setThumbnail(null);
-      // setThumbnailFile(null);
-      // setDescription("");
-      // setDropdowns([]);
-      // setCurrentImageIndices({});
-
-      // document.getElementById("file-input").value = "";
-      // fileInputRefs.current.forEach((ref) => {
-      //   if (ref?.current) ref.current.value = "";
-      // });
-      // fileInputRefs.current = [];
+      await getPostdata();
+      navigate(`/${userData.username}`);
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);

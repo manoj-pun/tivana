@@ -21,8 +21,7 @@ export const AppContextProvider = (props) => {
   const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
   const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [showUploadProfilePicture, setShowUploadProfilePicture] =
-    useState(false);
+  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -64,24 +63,26 @@ export const AppContextProvider = (props) => {
   }, []);
 
   const getPostdata = async () => {
-    try {
-      const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
-      console.log(data)
-      if (data.success) {
-        setPostData(data.posts);
-      } else {
-        toast.error("Failed to fetch posts");
-      }
-    } catch (error) {
-      toast.error("Error fetching posts");
-      console.error(error);
+  try {
+    setIsLoading(true);
+    const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
+    console.log(data)
+    if (data.success) {
+      setPostData(data.posts)
+    } else {
+      toast.error("Failed to fetch posts");
     }
-  };
+  } catch (error) {
+    toast.error("Error fetching posts");
+    console.error(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-  useEffect(() => {
+useEffect(() => {
   getPostdata();
 }, []);
-
 
   const value = {
     backendUrl,
