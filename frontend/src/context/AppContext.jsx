@@ -45,7 +45,6 @@ export const AppContextProvider = (props) => {
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/user-data");
-      // console.log(data)
       if (data.success) {
         setUserData(data.userData);
       } else {
@@ -58,32 +57,147 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  const getPostData = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
+      if (data.success) {
+        setPostData(data.posts);
+      } else {
+        toast.error("Failed to fetch posts");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Like a post
+  const likePost = async (postId) => {
+    try {
+      const { data } = await axios.post(backendUrl + `/api/user/like-post/${postId}`);
+      if (data.message === "Post liked successfully") {
+        toast.success(data.message);
+        // Update postData to reflect the new like
+        setPostData((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? { ...post, likedBy: [...post.likedBy, userData._id], likeCount: data.likeCount }
+              : post
+          )
+        );
+        // Update userData to reflect the liked post
+        setUserData((prev) => ({
+          ...prev,
+          likedPosts: [...prev.likedPosts, postId],
+        }));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error liking post");
+    }
+  };
+
+  // Unlike a post
+  const unlikePost = async (postId) => {
+    try {
+      const { data } = await axios.post(backendUrl + `/api/user/unlike-post/${postId}`);
+      if (data.message === "Post unliked successfully") {
+        toast.success(data.message);
+        // Update postData to reflect the unlike
+        setPostData((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  likedBy: post.likedBy.filter((id) => id !== userData._id),
+                  likeCount: data.likeCount,
+                }
+              : post
+          )
+        );
+        // Update userData to remove the unliked post
+        setUserData((prev) => ({
+          ...prev,
+          likedPosts: prev.likedPosts.filter((id) => id !== postId),
+        }));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error unliking post");
+    }
+  };
+
+  // Save a post
+  const savePost = async (postId) => {
+    try {
+      const { data } = await axios.post(backendUrl + `/api/user/save-post/${postId}`);
+      if (data.message === "Post saved successfully") {
+        toast.success(data.message);
+        // Update postData to reflect the save
+        setPostData((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? { ...post, savedBy: [...post.savedBy, userData._id], saveCount: data.saveCount }
+              : post
+          )
+        );
+        // Update userData to reflect the saved post
+        setUserData((prev) => ({
+          ...prev,
+          savedPosts: [...prev.savedPosts, postId],
+        }));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error saving post");
+    }
+  };
+
+  // Unsave a post
+  const unsavePost = async (postId) => {
+    try {
+      const { data } = await axios.post(backendUrl + `/api/user/unsave-post/${postId}`);
+      if (data.message === "Post unsaved successfully") {
+        toast.success(data.message);
+        // Update postData to reflect the unsave
+        setPostData((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  savedBy: post.savedBy.filter((id) => id !== userData._id),
+                  saveCount: data.saveCount,
+                }
+              : post
+          )
+        );
+        // Update userData to remove the unsaved post
+        setUserData((prev) => ({
+          ...prev,
+          savedPosts: prev.savedPosts.filter((id) => id !== postId),
+        }));
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error unsaving post");
+    }
+  };
+
   useEffect(() => {
     getAuthState();
   }, []);
 
-  const getPostdata = async () => {
-  try {
-    setIsLoading(true);
-    const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
-    // console.log(data)
-    if (data.success) {
-      setPostData(data.posts)
-    } else {
-      toast.error("Failed to fetch posts");
+  useEffect(() => {
+    if (isLoggedIn) {
+      getPostData();
     }
-  } catch (error) {
-    toast.error(error.message);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-useEffect(() => {
-  if (isLoggedIn) {
-    getPostdata();
-  }
-}, [isLoggedIn]);
+  }, [isLoggedIn]);
 
   const value = {
     backendUrl,
@@ -120,8 +234,13 @@ useEffect(() => {
     setShowUploadProfilePicture,
     isLoading,
     setIsLoading,
-    postData,setPostData,
-    getPostdata
+    postData,
+    setPostData,
+    getPostData,
+    likePost,
+    unlikePost,
+    savePost,
+    unsavePost,
   };
 
   return (

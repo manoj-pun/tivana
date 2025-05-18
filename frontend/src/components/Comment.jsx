@@ -1,43 +1,69 @@
-import React, { useContext, useEffect,useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { assets, fakeComments } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Comment = ({ isModal = true }) => {
+  const {
+    setShowComment,
+    selectedPost,
+    postData,
+    userData,
+    likePost,
+    unlikePost,
+    savePost,
+    unsavePost,
+  } = useContext(AppContext);
+  const [postDetails, setPostDetails] = useState(null);
 
-  const {setShowComment} = useContext(AppContext)
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
-
+  // Fetch post details
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
+    if (selectedPost && postData) {
+      const foundPost = postData.find((post) => post._id === selectedPost._id);
+      setPostDetails(foundPost || selectedPost);
+    }
+  }, [selectedPost, postData]);
 
-  const toggleLike = () => {
-    setLiked(prev => !prev);
-  };
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isModal) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "unset";
+      };
+    }
+  }, [isModal]);
 
-  const toggleSave = () => {
-  setSaved(prev => !prev);
-};
+  if (!postDetails) {
+    return (
+      <div className="text-white text-center">
+        No post selected or post not found
+      </div>
+    );
+  }
+
+  const isLiked = userData?.likedPosts.includes(postDetails._id);
+  const isSaved = userData?.savedPosts.includes(postDetails._id);
 
   return (
     <div
       className={`${
         isModal
           ? "fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
-          : ""
+          : "relative"
       }`}
+      role="dialog"
+      aria-labelledby="comment-modal-title"
     >
-      <div className={`${isModal ? "w-[500px]" : "w-full"} bg-[#171717] p-4 rounded-2xl shadow-lg`}>
-        {/* Rest of the comment component remains the same */}
+      <div
+        className={`${
+          isModal ? "w-[500px]" : "w-full"
+        } bg-[#171717] p-4 rounded-2xl shadow-lg max-h-[80vh] flex flex-col`}
+      >
         {/* Profile Info */}
         <div className="flex items-center gap-3 mb-3">
           <img
             src={fakeComments.userProfile.user}
-            alt=""
+            alt="Profile"
             className="w-9 rounded-full"
           />
           <span className="font-semibold text-white">
@@ -48,13 +74,13 @@ const Comment = ({ isModal = true }) => {
         <hr className="border-gray-600 w-full" />
 
         {/* Scrollable Container (User Post + Comments) */}
-        <div className="max-h-[42vh] overflow-y-auto space-y-4 pt-2">
+        <div className="max-h-[37vh] overflow-y-auto space-y-4 pt-2 flex-1">
           {/* User Post */}
           <div className="mb-3">
             <div className="flex gap-3 items-start">
               <img
                 src={fakeComments.userProfile.user}
-                alt=""
+                alt="Profile"
                 className="w-9 rounded-full"
               />
               <p className="text-sm">
@@ -74,6 +100,7 @@ const Comment = ({ isModal = true }) => {
               <img
                 src={comment.user}
                 className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                alt="Commenter Profile"
               />
               <div className="text-sm flex-1">
                 <span className="font-semibold text-white">
@@ -90,63 +117,45 @@ const Comment = ({ isModal = true }) => {
         {/* Actions */}
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center gap-3">
-            {liked ? (
-                      <img
-                        src={assets.heartFilled}
-                        className="w-6 h-6 cursor-pointer"
-                        onClick={toggleLike}
-                        alt="Unlike"
-                      />
-                    ) : (
-                      <img
-                        src={assets.heart}
-                        className="w-6 h-6 cursor-pointer"
-                        onClick={toggleLike}
-                        alt="Like"
-                      />
-                    )}
-            {/* <img
-              src={assets.comment}
-              alt="Comment"
+            <img
+              src={isLiked ? assets.heartFilled : assets.heart}
               className="w-6 h-6 cursor-pointer"
-            /> */}
+              onClick={() =>
+                isLiked ? unlikePost(postDetails._id) : likePost(postDetails._id)
+              }
+              alt={isLiked ? "Unlike" : "Like"}
+              aria-label={isLiked ? "Unlike post" : "Like post"}
+            />
             <img
               src={assets.send}
-              alt="Send"
+              alt="Share"
               className="w-6 h-6 cursor-pointer"
             />
           </div>
-          <div>
-            {saved ? (
-              <img
-                src={assets.saveFilled}
-                alt="Unsave"
-                className="w-6 h-6 cursor-pointer"
-                onClick={toggleSave}
-              />
-            ) : (
-              <img
-                src={assets.save}
-                alt="Save"
-                className="w-6 h-6 cursor-pointer"
-                onClick={toggleSave}
-              />
-            )}
-          </div>
+          <img
+            src={isSaved ? assets.saveFilled : assets.save}
+            alt={isSaved ? "Unsave" : "Save"}
+            className="w-6 h-6 cursor-pointer"
+            onClick={() =>
+              isSaved ? unsavePost(postDetails._id) : savePost(postDetails._id)
+            }
+            aria-label={isSaved ? "Unsave post" : "Save post"}
+          />
         </div>
 
-        {/* Timestamp */}
+        {/* Like/Save Counts */}
         <div className="mt-2 text-sm text-gray-400">
-          <span>
+          <p className="font-semibold mb-3">{postDetails.likeCount || postDetails.likedBy?.length || 0} likes</p>
+          <p>
             {fakeComments.Comments.length
               ? fakeComments.Comments[0].timestamp
               : "Just now"}
-          </span>
+          </p>
         </div>
 
         <hr className="border-gray-600 mt-4" />
 
-        {/* Add Comment */}
+        {/* Add Comment (Placeholder) */}
         <div className="flex items-center mt-3">
           <input
             type="text"
@@ -158,11 +167,18 @@ const Comment = ({ isModal = true }) => {
           </span>
         </div>
       </div>
-      
-      <div className='absolute top-10 right-20'>
-        <img src={assets.cross_icon} alt="" className='w-5 cursor-pointer' onClick={() => setShowComment(false)}/>
-      </div>
-      
+
+      {isModal && (
+        <div className="absolute top-10 right-20">
+          <img
+            src={assets.cross_icon}
+            alt="Close"
+            className="w-5 cursor-pointer"
+            onClick={() => setShowComment(false)}
+            aria-label="Close comment modal"
+          />
+        </div>
+      )}
     </div>
   );
 };

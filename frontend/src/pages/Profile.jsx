@@ -65,6 +65,10 @@ const Profile = () => {
   };
 
   const userPosts = postData?.filter(post => post.userId?.username === username) || [];
+  // Map saved post IDs to actual post objects from postData
+  const savedPosts = profileData.savedPosts
+    ? postData?.filter(post => profileData.savedPosts.includes(post._id)) || []
+    : [];
 
   return (
     <div className="text-white pt-10 flex flex-col items-center">
@@ -243,15 +247,15 @@ const Profile = () => {
               )}
             </div>
           )
-        ) : isCurrentUser && profileData.savedPosts && profileData.savedPosts.length > 0 ? (
+        ) : isCurrentUser && savedPosts.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">
-            {profileData.savedPosts.map((post, index) => (
+            {savedPosts.map((post, index) => (
               <div
                 key={index}
                 className="w-full aspect-square bg-gray-800 rounded-lg cursor-pointer overflow-hidden"
               >
                 <img
-                  src={post}
+                  src={post.thumbnail}
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   onClick={() => handlePostClick(post, true)}
                   alt={`Saved post ${index}`}
