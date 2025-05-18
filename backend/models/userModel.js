@@ -27,18 +27,34 @@ const userSchema = new mongoose.Schema(
             type: String, 
             // required: true
         },
-        userBio:{
+        userBio: {
             type: String,
             default: "No bio yet."
         },
-        followingCount:{
-            type: String,
-            default: 10,
+        followingCount: {
+            type: Number,  
+            default: 0,
         },
-        followersCount:{
-            type: String,
-            default: 10,
-        }
+        followersCount: {
+            type: Number,  
+            default: 0,
+        },
+        likedPosts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        }],
+        savedPosts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        }],
+        following: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }],
+        followers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }]
     },  
     {
         timestamps: true,
@@ -47,4 +63,3 @@ const userSchema = new mongoose.Schema(
 
 const userModel = mongoose.model("User", userSchema);
 export default userModel;
-

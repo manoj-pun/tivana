@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const postSchema = mongoose.Schema({
+const postSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -10,7 +10,7 @@ const postSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    thumbnailPublicId: { //To remove post from cloudinary
+    thumbnailPublicId: { // To remove post from cloudinary
         type: String, 
         required: true
     },
@@ -21,11 +21,21 @@ const postSchema = mongoose.Schema({
     dropdowns: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Dropdown"
-    }]
+    }],
+    // Array of users who liked this post
+    likedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    // Array of users who saved this post
+    savedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
 }, {
     timestamps: true,
 });
 
-const Post = mongoose.model("Post", postSchema);
+const postModel = mongoose.model("Post", postSchema);
 
-export default Post;
+export default postModel;

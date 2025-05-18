@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+import postModel from "../models/postModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 export const uploadProfileImage = async (req, res) => {
@@ -185,7 +186,9 @@ export const getUserData = async (req, res) => {
         profileImage:user.profileImage,
         followersCount: user.followersCount,
         followingCount:user.followingCount,
-        userBio:user.userBio
+        userBio:user.userBio,
+        likedPosts: user.likedPosts,
+        savedPosts: user.savedPosts
       },
     });
   } catch (error) {
@@ -210,6 +213,132 @@ export const getUserByUsername = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+export const likePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user.id; // Get from auth middleware instead of body
+
+        const [user, post] = await Promise.all([
+            userModel.findById(userId),
+            postModel.findById(postId)
+        ]);
+
+        if (!post) return res.status(404).json({ message: "Post not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (user.likedPosts.includes(postId)) {
+            return res.status(400).json({ message: "Post already liked" });
+        }
+
+        await Promise.all([
+            userModel.findByIdAndUpdate(userId, { $addToSet: { likedPosts: postId } }),
+            postModel.findByIdAndUpdate(postId, { $addToSet: { likedBy: userId } })
+        ]);
+
+        return res.status(200).json({ 
+            message: "Post liked successfully",
+            likeCount: post.likedBy.length + 1
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error liking post", error: error.message });
+    }
+};
+
+export const unlikePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user.id;
+
+        const [user, post] = await Promise.all([
+            userModel.findById(userId),
+            postModel.findById(postId)
+        ]);
+
+        if (!post) return res.status(404).json({ message: "Post not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (!user.likedPosts.includes(postId)) {
+            return res.status(400).json({ message: "Post not previously liked" });
+        }
+
+        await Promise.all([
+            userModel.findByIdAndUpdate(userId, { $pull: { likedPosts: postId } }),
+            postModel.findByIdAndUpdate(postId, { $pull: { likedBy: userId } })
+        ]);
+
+        return res.status(200).json({ 
+            message: "Post unliked successfully",
+            likeCount: post.likedBy.length - 1
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error unliking post", error: error.message });
+    }
+};
+
+export const savePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user.id;
+
+        const [user, post] = await Promise.all([
+            userModel.findById(userId),
+            postModel.findById(postId)
+        ]);
+
+        if (!post) return res.status(404).json({ message: "Post not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (user.savedPosts.includes(postId)) {
+            return res.status(400).json({ message: "Post already saved" });
+        }
+
+        await Promise.all([
+            userModel.findByIdAndUpdate(userId, { $addToSet: { savedPosts: postId } }),
+            postModel.findByIdAndUpdate(postId, { $addToSet: { savedBy: userId } })
+        ]);
+
+        return res.status(200).json({ 
+            message: "Post saved successfully",
+            saveCount: post.savedBy.length + 1
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error saving post", error: error.message });
+    }
+};
+
+export const unsavePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user.id;
+
+        const [user, post] = await Promise.all([
+            userModel.findById(userId),
+            postModel.findById(postId)
+        ]);
+
+        if (!post) return res.status(404).json({ message: "Post not found" });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (!user.savedPosts.includes(postId)) {
+            return res.status(400).json({ message: "Post not previously saved" });
+        }
+
+        await Promise.all([
+            userModel.findByIdAndUpdate(userId, { $pull: { savedPosts: postId } }),
+            postModel.findByIdAndUpdate(postId, { $pull: { savedBy: userId } })
+        ]);
+
+        return res.status(200).json({ 
+            message: "Post unsaved successfully",
+            saveCount: post.savedBy.length - 1
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error unsaving post", error: error.message });
+    }
+};
+
 
 
 
