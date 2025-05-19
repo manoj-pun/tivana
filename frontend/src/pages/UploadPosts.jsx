@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const UploadPosts = () => {
-  const { backendUrl, setIsLoading,userData,getPostdata } = useContext(AppContext);
+  const { backendUrl, setIsLoading,userData,getPostData } = useContext(AppContext);
   const navigate = useNavigate()
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -148,7 +148,7 @@ const UploadPosts = () => {
 
       toast.success(data.message);
 
-      await getPostdata();
+      await getPostData();
       navigate(`/${userData.username}`);
     } catch (error) {
       if (error.response?.data?.message) {

@@ -1,4 +1,4 @@
-import React, { useContext,useState } from "react";
+import React, { useContext, useState } from "react";
 import { format } from "timeago.js";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
@@ -19,16 +19,35 @@ const HomeCard = () => {
     unlikePost,
     savePost,
     unsavePost,
+    setSelectedPost,
+    addComment, // Add addComment
   } = useContext(AppContext);
 
   const navigate = useNavigate();
   const [showDropdownMap, setShowDropdownMap] = useState({});
+  const [commentTextMap, setCommentTextMap] = useState({}); // State for comment inputs
 
   const toggleDropdown = (postId) => {
     setShowDropdownMap((prev) => ({
       ...prev,
       [postId]: !prev[postId],
     }));
+  };
+
+  const handleCommentChange = (postId, value) => {
+    setCommentTextMap((prev) => ({
+      ...prev,
+      [postId]: value,
+    }));
+  };
+
+  const handleAddComment = async (postId) => {
+    const text = commentTextMap[postId]?.trim();
+    if (!text) return;
+    const newComment = await addComment(postId, text);
+    if (newComment) {
+      setCommentTextMap((prev) => ({ ...prev, [postId]: "" })); // Clear input
+    }
   };
 
   if (isLoading) {
@@ -94,7 +113,11 @@ const HomeCard = () => {
                 <img
                   src={assets.comment}
                   className="w-[23px] h-[23px] cursor-pointer"
-                  onClick={() => setShowComment(true)}
+                  onClick={() => {
+                    console.log("Setting selectedPost:", post);
+                    setSelectedPost(post);
+                    setShowComment(true);
+                  }}
                   alt="Comment"
                 />
                 <img
@@ -140,13 +163,21 @@ const HomeCard = () => {
               )}
             </div>
 
-            {/* Input */}
-            <div>
+            {/* Comment Input */}
+            <div className="flex items-center">
               <input
                 type="text"
                 className="w-full text-white p-1.5 bg-transparent outline-none placeholder-[#b3afaf]"
                 placeholder="Add a comment..."
+                value={commentTextMap[post._id] || ""}
+                onChange={(e) => handleCommentChange(post._id, e.target.value)}
               />
+              <span
+                className="text-blue-400 cursor-pointer hover:opacity-80 ml-2"
+                onClick={() => handleAddComment(post._id)}
+              >
+                Post
+              </span>
             </div>
           </div>
         );

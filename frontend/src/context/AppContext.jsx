@@ -61,6 +61,7 @@ export const AppContextProvider = (props) => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
+      console.log("Fetched posts:", data.posts); // Debug
       if (data.success) {
         setPostData(data.posts);
       } else {
@@ -79,7 +80,6 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.post(backendUrl + `/api/user/like-post/${postId}`);
       if (data.message === "Post liked successfully") {
         toast.success(data.message);
-        // Update postData to reflect the new like
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
@@ -87,7 +87,6 @@ export const AppContextProvider = (props) => {
               : post
           )
         );
-        // Update userData to reflect the liked post
         setUserData((prev) => ({
           ...prev,
           likedPosts: [...prev.likedPosts, postId],
@@ -106,7 +105,6 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.post(backendUrl + `/api/user/unlike-post/${postId}`);
       if (data.message === "Post unliked successfully") {
         toast.success(data.message);
-        // Update postData to reflect the unlike
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
@@ -118,7 +116,6 @@ export const AppContextProvider = (props) => {
               : post
           )
         );
-        // Update userData to remove the unliked post
         setUserData((prev) => ({
           ...prev,
           likedPosts: prev.likedPosts.filter((id) => id !== postId),
@@ -137,7 +134,6 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.post(backendUrl + `/api/user/save-post/${postId}`);
       if (data.message === "Post saved successfully") {
         toast.success(data.message);
-        // Update postData to reflect the save
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
@@ -145,7 +141,6 @@ export const AppContextProvider = (props) => {
               : post
           )
         );
-        // Update userData to reflect the saved post
         setUserData((prev) => ({
           ...prev,
           savedPosts: [...prev.savedPosts, postId],
@@ -164,7 +159,6 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.post(backendUrl + `/api/user/unsave-post/${postId}`);
       if (data.message === "Post unsaved successfully") {
         toast.success(data.message);
-        // Update postData to reflect the unsave
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
@@ -176,7 +170,6 @@ export const AppContextProvider = (props) => {
               : post
           )
         );
-        // Update userData to remove the unsaved post
         setUserData((prev) => ({
           ...prev,
           savedPosts: prev.savedPosts.filter((id) => id !== postId),
@@ -186,6 +179,54 @@ export const AppContextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Error unsaving post");
+    }
+  };
+
+  // Add a comment
+  const addComment = async (postId, text) => {
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/user/comment-post/${postId}`,
+        { comment: text }, // Fixed to match backend
+        { withCredentials: true }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        // Update postData to include the full comment object
+        setPostData((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? { ...post, comments: [data.comment, ...post.comments] }
+              : post
+          )
+        );
+        return data.comment;
+      } else {
+        toast.error(data.message);
+        return null;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error adding comment");
+      return null;
+    }
+  };
+
+  // Get comments for a post
+  const getComments = async (postId) => {
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/user/comments/${postId}`,
+        { withCredentials: true }
+      );
+      if (data.success) {
+        return data.comments; // Return the comments array
+      } else {
+        toast.error(data.message);
+        return [];
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error fetching comments");
+      return [];
     }
   };
 
@@ -241,6 +282,8 @@ export const AppContextProvider = (props) => {
     unlikePost,
     savePost,
     unsavePost,
+    addComment,
+    getComments,
   };
 
   return (
