@@ -88,10 +88,17 @@ export const uploadPost = async (req, res) => {
 //get all the posts
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await postModel
-      .find()
+    const posts = await postModel.find()
       .populate("userId", "fullname username profileImage")
       .populate("dropdowns")
+      .populate({
+        path: "comments",
+        options: { sort: { createdAt: -1 } }, // Sort comments newest first
+        populate: {
+          path: "userId",
+          select: "username profileImage"
+        }
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, posts });

@@ -1,6 +1,7 @@
 import userModel from "../models/userModel.js";
 import postModel from "../models/postModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import commentModel from "../models/CommentModel.js";
 
 export const uploadProfileImage = async (req, res) => {
   const profileImage = req.file;
@@ -336,6 +337,85 @@ export const unsavePost = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ message: "Error unsaving post", error: error.message });
+    }
+};
+
+// Add comment to a post
+export const addComment = async (req, res) => {
+    try {
+        const { comment } = req.body;
+        const { postId } = req.params;
+        const userId = req.user.id;
+
+        // Validate input
+        if (!comment) {
+            return res.status(400).json({
+                success: false,
+                message: "Comment text is required"
+            });
+        }
+
+        // Check if post exists
+        const post = await postModel.findById(postId);
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+
+        // Create new comment
+        const newComment = await commentModel.create({
+            postId,
+            userId,
+            comment
+        });
+
+        await newComment.save();
+
+        // Add comment reference to the post
+        await postModel.findByIdAndUpdate(postId, {
+            $push: { comments: newComment._id }
+        });
+
+        // Populate user details for the response
+        const populatedComment = await commentModel.findById(newComment._id)
+            .populate('userId', 'username profileImage');
+
+        res.status(201).json({
+            success: true,
+            message: "Comment added successfully",
+            comment: populatedComment
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// Get comments for a post
+export const getPostComments = async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        const comments = await commentModel.find({ postId })
+            .populate('userId', 'username profileImage')
+            .sort({ createdAt: -1 })
+            .lean();
+
+        res.status(200).json({
+            success: true,
+            comments
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 };
 
