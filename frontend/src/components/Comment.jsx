@@ -3,6 +3,7 @@ import { format } from "timeago.js";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const Comment = ({ isModal = true }) => {
   const {
@@ -18,19 +19,17 @@ const Comment = ({ isModal = true }) => {
     isLoading,
     setSelectedPost,
   } = useContext(AppContext);
-  const [postDetails, setPostDetails] = useState(null);
+  const [postDetails, setPostDetails] = useState(selectedPost || null); // Initialize with selectedPost
   const [commentText, setCommentText] = useState("");
   const navigate = useNavigate();
 
-  // Fetch post details
+  // Sync postDetails with postData when available
   useEffect(() => {
-    console.log("Comment - selectedPost:", selectedPost);
-    console.log("Comment - postData:", postData);
-    if (selectedPost && postData) {
+    if (selectedPost && postData && !isLoading) {
       const foundPost = postData.find((post) => post._id === selectedPost._id);
       setPostDetails(foundPost || selectedPost);
     }
-  }, [selectedPost, postData]);
+  }, [selectedPost, postData, isLoading]);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -61,7 +60,7 @@ const Comment = ({ isModal = true }) => {
   };
 
   if (isLoading) {
-    return <div className="text-white text-center">Loading post data...</div>;
+    return <Loading/>
   }
 
   if (!postDetails) {
@@ -77,7 +76,9 @@ const Comment = ({ isModal = true }) => {
 
   // Sort comments by createdAt in descending order (newest first)
   const sortedComments = postDetails.comments
-    ? [...postDetails.comments].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    ? [...postDetails.comments].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      )
     : [];
 
   return (
@@ -96,19 +97,47 @@ const Comment = ({ isModal = true }) => {
         } bg-[#171717] p-4 rounded-2xl shadow-lg max-h-[76vh] flex flex-col`}
       >
         {/* Profile Info */}
-        <div className="flex items-center gap-3 mb-3">
-          <img
-            src={postDetails.userId.profileImage || assets.defaultprofile}
-            alt="Profile"
-            className="w-9 rounded-full cursor-pointer"
-            onClick={() => handleUserClick(postDetails.userId.username)}
-          />
-          <span
-            className="font-semibold text-white cursor-pointer"
-            onClick={() => handleUserClick(postDetails.userId.username)}
-          >
-            {postDetails.userId.username}
-          </span>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex gap-2">
+            <img
+              src={postDetails.userId.profileImage || assets.defaultprofile}
+              alt="Profile"
+              className="w-9 rounded-full cursor-pointer"
+              onClick={() => handleUserClick(postDetails.userId.username)}
+            />
+            <div className="flex items-center gap-1">
+              <span
+                className="font-semibold text-white cursor-pointer"
+                onClick={() => handleUserClick(postDetails.userId.username)}
+              >
+                {postDetails.userId.username}
+              </span>
+              <span>
+                {userData.isVerified && (
+                  <img
+                    src={assets.verified}
+                    alt="Verified"
+                    className="w-4 h-4"
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {isModal && (
+            <div>
+              <img
+                src={assets.cross_icon}
+                alt="Close"
+                className="w-5 cursor-pointer"
+                onClick={() => {
+                  setShowComment(false);
+                  setSelectedPost(null);
+                }}
+                aria-label="Close comment modal"
+              />
+            </div>
+          )}
         </div>
 
         <hr className="border-gray-600 w-full" />
@@ -127,17 +156,28 @@ const Comment = ({ isModal = true }) => {
                 />
                 <div className="text-sm flex-1">
                   <div className="flex items-center gap-2">
-                    <span
-                      className="font-semibold text-white cursor-pointer"
-                      onClick={() => handleUserClick(comment.userId.username)}
-                    >
-                      {comment.userId.username}
-                    </span>
-                    <span className="text-gray-400 text-xs">
-                      {format(comment.createdAt)}
-                    </span>
+                    <div className="flex items-center gap-1">
+                      <span
+                        className="font-semibold text-white cursor-pointer"
+                        onClick={() => handleUserClick(comment.userId.username)}
+                      >
+                        {comment.userId.username}
+                      </span>
+                      <span>
+                        {comment.userId.isVerified && (
+                          <img
+                            src={assets.verified}
+                            alt="Verified"
+                            className="w-4 h-4"
+                          />
+                        )}
+                      </span>
+                    </div>
+                    <span className="text-gray-300">{comment.comment}</span>
                   </div>
-                  <span className="text-gray-300">{comment.comment}</span>
+                  <span className="text-gray-400 text-xs">
+                    {format(comment.createdAt)}
+                  </span>
                 </div>
               </div>
             ))
@@ -157,7 +197,9 @@ const Comment = ({ isModal = true }) => {
               src={isLiked ? assets.heartFilled : assets.heart}
               className="w-6 h-6 cursor-pointer"
               onClick={() =>
-                isLiked ? unlikePost(postDetails._id) : likePost(postDetails._id)
+                isLiked
+                  ? unlikePost(postDetails._id)
+                  : likePost(postDetails._id)
               }
               alt={isLiked ? "Unlike" : "Like"}
               aria-label={isLiked ? "Unlike post" : "Like post"}
@@ -209,21 +251,6 @@ const Comment = ({ isModal = true }) => {
           </span>
         </div>
       </div>
-
-      {isModal && (
-        <div className="absolute top-10 right-20">
-          <img
-            src={assets.cross_icon}
-            alt="Close"
-            className="w-5 cursor-pointer"
-            onClick={() => {
-              setShowComment(false);
-              setSelectedPost(null);
-            }}
-            aria-label="Close comment modal"
-          />
-        </div>
-      )}
     </div>
   );
 };

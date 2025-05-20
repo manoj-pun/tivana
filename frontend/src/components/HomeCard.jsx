@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { format } from "timeago.js";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
@@ -20,7 +20,7 @@ const HomeCard = () => {
     savePost,
     unsavePost,
     setSelectedPost,
-    addComment, // Add addComment
+    addComment, 
   } = useContext(AppContext);
 
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ const HomeCard = () => {
                   window.scrollTo(0, 0);
                 }}
               />
-              <p className="flex gap-2 text-sm text-white">
+              <p className="flex gap-2 items-center text-sm text-white">
                 <span
                   className="font-semibold cursor-pointer"
                   onClick={() => {
@@ -90,6 +90,9 @@ const HomeCard = () => {
                   }}
                 >
                   {post.userId.username}
+                </span>
+                <span>
+                  {userData?.isVerified && <img src={assets.verified} alt="Verified" className="w-4 h-4" />}
                 </span>
                 <span>·</span>
                 <span className="text-[#808080]">{format(post.createdAt)}</span>

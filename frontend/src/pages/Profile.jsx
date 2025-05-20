@@ -30,7 +30,7 @@ const Profile = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(`${backendUrl}/api/user/${username}`);
-        
+
         if (data) {
           setProfileData(data);
           // If viewing own profile, update current user
@@ -64,10 +64,12 @@ const Profile = () => {
     isSaved ? setShowUserSavedPosts(true) : setShowUserUploadedPosts(true);
   };
 
-  const userPosts = postData?.filter(post => post.userId?.username === username) || [];
+  const userPosts =
+    postData?.filter((post) => post.userId?.username === username) || [];
   // Map saved post IDs to actual post objects from postData
   const savedPosts = profileData.savedPosts
-    ? postData?.filter(post => profileData.savedPosts.includes(post._id)) || []
+    ? postData?.filter((post) => profileData.savedPosts.includes(post._id)) ||
+      []
     : [];
 
   return (
@@ -96,7 +98,17 @@ const Profile = () => {
 
           <div className="flex flex-col gap-y-3 flex-1">
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-[18px]">{profileData.username}</span>
+              <div className="flex gap-1 items-center">
+                <span className="text-[18px]">{profileData.username}</span>
+                {profileData.isVerified && (
+                  <img
+                    src={assets.verified}
+                    alt="Verified"
+                    className="w-6 h-6"
+                    title="Verified account"
+                  />
+                )}
+              </div>
               {isCurrentUser ? (
                 <button
                   onClick={() =>
@@ -122,8 +134,7 @@ const Profile = () => {
 
             <div className="flex gap-4 text-sm">
               <span className="font-semibold">
-                {userPosts.length}{" "}
-                <span className="text-[#808080]">posts</span>
+                {userPosts.length} <span className="text-[#808080]">posts</span>
               </span>
               <span
                 className="font-semibold cursor-pointer"
@@ -234,7 +245,9 @@ const Profile = () => {
                     alt="No posts"
                     className="w-20 mb-4 cursor-pointer"
                   />
-                  <div>When you share posts, they will appear on your profile.</div>
+                  <div>
+                    When you share posts, they will appear on your profile.
+                  </div>
                   <p
                     className="mt-4 text-[#4193EF] text-xl font-semibold cursor-pointer"
                     onClick={() => navigate("/upload-post")}
@@ -265,9 +278,7 @@ const Profile = () => {
           </div>
         ) : (
           <div className="text-center py-10 text-gray-400">
-            {isCurrentUser
-              ? "When you save posts, they will appear here."
-              : ""}
+            {isCurrentUser ? "When you save posts, they will appear here." : ""}
           </div>
         )}
       </div>

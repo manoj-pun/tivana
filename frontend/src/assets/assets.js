@@ -28,6 +28,7 @@ import loginCover from "./loginCover.png"
 import defaultprofile from "./defaultprofile.jpeg"
 import notfound from "./404.svg"
 import Upload from "./add.png"
+import verified from "./verified.png"
 
 import profile from "./profile.jpeg"
 import check from "./check.jpeg"
@@ -97,7 +98,8 @@ export const assets = {
     loginCover,
     defaultprofile,
     notfound,
-    Upload
+    Upload,
+    verified
 };
 
 export const searchData = [

@@ -240,6 +240,12 @@ export const AppContextProvider = (props) => {
     }
   }, [isLoggedIn]);
 
+  useEffect(() => {
+  if (userData) {
+    console.log("Updated userData:", userData);
+  }
+}, [userData]);
+
   const value = {
     backendUrl,
     isLoggedIn,
