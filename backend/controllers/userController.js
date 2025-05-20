@@ -189,7 +189,8 @@ export const getUserData = async (req, res) => {
         followingCount:user.followingCount,
         userBio:user.userBio,
         likedPosts: user.likedPosts,
-        savedPosts: user.savedPosts
+        savedPosts: user.savedPosts,
+        isVerified: user.isVerified
       },
     });
   } catch (error) {
@@ -380,7 +381,7 @@ export const addComment = async (req, res) => {
 
         // Populate user details for the response
         const populatedComment = await commentModel.findById(newComment._id)
-            .populate('userId', 'username profileImage');
+            .populate('userId', 'username profileImage isVerified');
 
         res.status(201).json({
             success: true,
@@ -402,7 +403,7 @@ export const getPostComments = async (req, res) => {
         const { postId } = req.params;
 
         const comments = await commentModel.find({ postId })
-            .populate('userId', 'username profileImage')
+            .populate('userId', 'username profileImage isVerified')
             .sort({ createdAt: -1 })
             .lean();
 
@@ -417,6 +418,36 @@ export const getPostComments = async (req, res) => {
             message: error.message
         });
     }
+};
+
+//verify user
+export const verifyUser = async (req, res) => {
+  try {
+    const userId  = req.user?.id;
+    
+    // Check if user exists
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Update verification status
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User verified successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
 };
 
 

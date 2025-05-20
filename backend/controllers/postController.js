@@ -96,7 +96,7 @@ export const getAllPosts = async (req, res) => {
         options: { sort: { createdAt: -1 } }, // Sort comments newest first
         populate: {
           path: "userId",
-          select: "username profileImage"
+          select: "username profileImage isVerified"
         }
       })
       .sort({ createdAt: -1 });
