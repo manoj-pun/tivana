@@ -3,9 +3,10 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import Comment from "./Comment";
 import Dropdown from "./Dropdown";
+import DeletePost from "./DeletePost";
 
 const UserUploadedPosts = () => {
-  const { currentUser, selectedPost, setShowUserUploadedPosts, postData } =
+  const { currentUser, selectedPost, setShowUserUploadedPosts, postData,showDeletePost, setShowDeletePost } =
     useContext(AppContext);
   const [activeTab, setActiveTab] = useState("comments");
   const [postDetails, setPostDetails] = useState(null);
@@ -17,23 +18,44 @@ const UserUploadedPosts = () => {
     }
   }, [selectedPost, postData]);
 
+  // Check if the current user is the post owner
+  const isPostOwner = currentUser && selectedPost && currentUser._id === (selectedPost.userId?._id || selectedPost.userId);
+  // console.log(
+  //   'isPostOwner:', isPostOwner,
+  //   'currentUser:', currentUser?._id,
+  //   'selectedPost.userId:', selectedPost?.userId,
+  //   'selectedPost.userId._id:', selectedPost?.userId?._id
+  // );
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
       <div
-        className="bg-[#1a1a1a] rounded-lg w-full max-w-5xl flex"
+        className="bg-[#1a1a1a] rounded-lg w-full max-w-5xl flex relative"
         style={{ height: "85vh", maxHeight: "85vh" }}
       >
         {/* Left: Image Section */}
-        <div className="w-1/2 h-full flex items-center justify-center overflow-hidden bg-black border border-[#262626]">
-          <img
-            src={
-              selectedPost?.thumbnail ||
-              currentUser.userPosts?.[0] ||
-              assets.pokhara
-            }
-            alt="User Post"
-            className="max-w-full max-h-full object-contain p-1"
-          />
+        <div className="w-1/2 h-full flex items-center justify-center overflow-hidden bg-black border border-[#262626] relative">
+          <div className="w-full h-full flex items-center justify-center">
+            <img
+              src={ selectedPost?.thumbnail}
+              alt="User Post"
+              className="max-w-full max-h-full object-contain p-1"
+            />
+          </div>
+          {/* Show "More" icon only if the current user is the post owner */}
+          {isPostOwner && (
+            <div
+              onClick={() => setShowDeletePost(!showDeletePost)}
+              className="absolute top-2 right-2 z-60"
+            >
+              <img
+                src={assets.more || "https://via.placeholder.com/32"}
+                alt="More options"
+                className="w-8 h-8 cursor-pointer"
+                onError={() => console.warn("Failed to load more icon")}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right: Content Area */}
@@ -101,15 +123,23 @@ const UserUploadedPosts = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="absolute top-10 right-20">
-        <img
-          src={assets.cross_icon}
-          alt=""
-          className="w-5 cursor-pointer"
-          onClick={() => setShowUserUploadedPosts(false)}
-        />
+        {/* Close button (always visible) */}
+        <div className="absolute -top-0 -right-8 z-60">
+          <img
+            src={assets.cross_icon}
+            alt="Close"
+            className="w-5 cursor-pointer"
+            onClick={() => {setShowUserUploadedPosts(false);setShowDeletePost(false)}}
+          />
+        </div>
+
+        {/* DeletePost component - toggled by the more icon */}
+        {showDeletePost && isPostOwner && (
+          <div className="absolute top-12 right-12 z-50">
+            <DeletePost />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -91,8 +91,8 @@ const HomeCard = () => {
                 >
                   {post.userId.username}
                 </span>
-                <span>
-                  {userData?.isVerified && <img src={assets.verified} alt="Verified" className="w-4 h-4" />}
+                <span className="-ml-1.5">
+                  {post.userId.isVerified && <img src={assets.verified} alt="Verified" className="w-4 h-4" />}
                 </span>
                 <span>·</span>
                 <span className="text-[#808080]">{format(post.createdAt)}</span>

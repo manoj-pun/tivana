@@ -19,7 +19,7 @@ const Comment = ({ isModal = true }) => {
     isLoading,
     setSelectedPost,
   } = useContext(AppContext);
-  const [postDetails, setPostDetails] = useState(selectedPost || null); // Initialize with selectedPost
+  const [postDetails, setPostDetails] = useState(selectedPost || null); 
   const [commentText, setCommentText] = useState("");
   const navigate = useNavigate();
 
@@ -105,7 +105,7 @@ const Comment = ({ isModal = true }) => {
               className="w-9 rounded-full cursor-pointer"
               onClick={() => handleUserClick(postDetails.userId.username)}
             />
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-[1px]">
               <span
                 className="font-semibold text-white cursor-pointer"
                 onClick={() => handleUserClick(postDetails.userId.username)}
@@ -113,7 +113,7 @@ const Comment = ({ isModal = true }) => {
                 {postDetails.userId.username}
               </span>
               <span>
-                {userData.isVerified && (
+                {postDetails.userId.isVerified && (
                   <img
                     src={assets.verified}
                     alt="Verified"
@@ -156,7 +156,7 @@ const Comment = ({ isModal = true }) => {
                 />
                 <div className="text-sm flex-1">
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-[1px]">
                       <span
                         className="font-semibold text-white cursor-pointer"
                         onClick={() => handleUserClick(comment.userId.username)}

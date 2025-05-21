@@ -27,6 +27,7 @@ export const AppContextProvider = (props) => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [postData, setPostData] = useState(null);
+  const [showDeletePost,setShowDeletePost] = useState(false)
 
   const getAuthState = async () => {
     try {
@@ -289,7 +290,9 @@ export const AppContextProvider = (props) => {
     savePost,
     unsavePost,
     addComment,
-    getComments,
+    getComments,  
+    showDeletePost,
+    setShowDeletePost
   };
 
   return (

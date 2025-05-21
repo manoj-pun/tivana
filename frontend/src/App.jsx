@@ -22,10 +22,11 @@ import UploadProfilePicture from "./components/UploadProfilePicture";
 import EditProfile from "./components/EditProfile";
 import Loading from "./components/Loading";
 import NotFound from "./components/NotFound";
+import DeletePost from "./components/DeletePost";
 
 
 const App = () => {
-  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture,isLoading } = useContext(AppContext);
+  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture,isLoading, showDeletePost } = useContext(AppContext);
 
   return (
     <>
@@ -47,6 +48,7 @@ const App = () => {
             {showUserUploadedPosts && <UserUploadedPosts />}
             {showUserSavedPosts && <UserSavedPosts />}
             {showUploadProfilePicture && <UploadProfilePicture/>}
+            {showDeletePost && <DeletePost/>}
 
             <Routes>
               <Route path="/home" element={<Home />} />

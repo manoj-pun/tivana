@@ -74,12 +74,6 @@ const Sidebar = () => {
     setShowNotifications(false);
     setShowMenu(false);
     navigate(`/${username}`);
-
-    // Get the first user from homeData for now
-    // const firstUser = homeData[0];
-    // if (firstUser) {
-    //   navigate(`/${firstUser.username}`);
-    // }
   };
 
   return (
@@ -201,16 +195,6 @@ const Sidebar = () => {
                 : "text-white"}`} onClick={() => handleProfileClick(userData?.username)}>
             <img src={userData?.profileImage || assets.defaultprofile} alt="Profile" className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7"/>
             <p className="max-sm:hidden">{userData?.username}</p>
-
-            {/* 
-               Without optional chaining (userData.username):
-              On first render, userData is null or false, so accessing userData.username throws:
-              TypeError: Cannot read properties of null (reading 'username')
-
-              With optional chaining (userData?.username):
-              This tells React:
-              "Only try to access .username if userData is not null or undefined."
-            */}
           </div>
 
           {/* Menu Div */}
