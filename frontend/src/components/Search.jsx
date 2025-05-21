@@ -119,7 +119,7 @@ const Search = () => {
 
       {/* Loading indicator - appears only when searching and query exists */}
         {isSearching && query && (
-          <div className="flex justify-center items-center h-[60vh]">
+          <div className="flex justify-center items-center">
             <div className="loading-dots">
               <div className="dot animate-bounce" style={{ animationDelay: '0ms' }} />
               <div className="dot animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -156,7 +156,7 @@ const Search = () => {
               ))}
             </div>
           ) : !isSearching ? (
-            <div className="text-[#808080] flex items-center justify-center h-[60vh]">
+            <div className="text-[#808080] flex items-center justify-center mt-50">
               <p>No users found.</p>
             </div>
           ) : null}
@@ -193,7 +193,7 @@ const Search = () => {
           ))}
         </div>
       ) : (
-        <div className="text-[#808080] flex items-center justify-around h-[60vh]">
+        <div className="text-[#808080] flex items-center justify-around mt-50">
           <p>Recent searches will appear here.</p>
         </div>
       )}

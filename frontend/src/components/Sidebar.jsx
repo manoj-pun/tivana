@@ -6,8 +6,10 @@ import { AppContext } from "../context/AppContext";
 const Sidebar = () => {
   const {
     setShowSearch,
+    showSearch,
     setShowNotifications,
     setShowMenu,
+    showMenu,
     activeNavLink,
     setActiveNavLink,
     userData,
@@ -46,7 +48,7 @@ const Sidebar = () => {
   // Function to handle Search div click
   const handleSearchClick = () => {
     setActiveNavLink("search");
-    setShowSearch(true);
+    setShowSearch(!showSearch);
     setShowNotifications(false);
     setShowMenu(false);
   };
@@ -64,7 +66,7 @@ const Sidebar = () => {
     setActiveNavLink("menu");
     setShowSearch(false);
     setShowNotifications(false);
-    setShowMenu(true);
+    setShowMenu(!showMenu);
   };
 
   // Function to handle Profile div click
