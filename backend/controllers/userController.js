@@ -451,6 +451,25 @@ export const verifyUser = async (req, res) => {
 };
 
 
+//Search users
+export const searchUsers = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const users = await userModel.find({
+      $or: [
+        { username: { $regex: query, $options: 'i' } },
+        { fullname: { $regex: query, $options: 'i' } }
+      ]
+    }).select('username fullname profileImage isVerified');
+
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
 
 
 

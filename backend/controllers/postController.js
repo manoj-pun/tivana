@@ -89,7 +89,7 @@ export const uploadPost = async (req, res) => {
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await postModel.find()
-      .populate("userId", "fullname username profileImage")
+      .populate("userId", "fullname username profileImage isVerified")
       .populate("dropdowns")
       .populate({
         path: "comments",
