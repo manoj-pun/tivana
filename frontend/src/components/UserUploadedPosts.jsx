@@ -49,10 +49,9 @@ const UserUploadedPosts = () => {
               className="absolute top-2 right-2 z-60"
             >
               <img
-                src={assets.more || "https://via.placeholder.com/32"}
+                src={assets.more}
                 alt="More options"
                 className="w-8 h-8 cursor-pointer"
-                onError={() => console.warn("Failed to load more icon")}
               />
             </div>
           )}

@@ -384,3 +384,32 @@ export const fakeComments = {
       },
     ],
 };
+
+
+export const fakeFollowers = [
+    {followersImage:profile1,followersName:"Emma Brown", followersUsername:"emmabrown"},
+    {followersImage:profile2,followersName:"Jane Doe", followersUsername:"janedoe"},
+    {followersImage:profile3,followersName:"Dylan Brooks", followersUsername:"dylanbrooks"},
+    {followersImage:profile4,followersName:"Grace Taylor", followersUsername:"gracetaylor"},
+    {followersImage:profile5,followersName:"Luke Harisson", followersUsername:"lukeharisson"},
+    {followersImage:profile1,followersName:"Emma Brown", followersUsername:"emmabrown"},
+    {followersImage:profile2,followersName:"Jane Doe", followersUsername:"janedoe"},
+    {followersImage:profile3,followersName:"Dylan Brooks", followersUsername:"dylanbrooks"},
+    {followersImage:profile4,followersName:"Grace Taylor", followersUsername:"gracetaylor"},
+    {followersImage:profile5,followersName:"Luke Harisson", followersUsername:"lukeharisson"},
+];
+
+export const fakeFollowing = [
+    {followersImage:profile1,followersName:"Emma Brown", followersUsername:"emmabrown"},
+    {followersImage:profile2,followersName:"Jane Doe", followersUsername:"janedoe"},
+    {followersImage:profile3,followersName:"Dylan Brooks", followersUsername:"dylanbrooks"},
+    {followersImage:profile4,followersName:"Grace Taylor", followersUsername:"gracetaylor"},
+    {followersImage:profile5,followersName:"Luke Harisson", followersUsername:"lukeharisson"},
+    {followersImage:profile1,followersName:"Emma Brown", followersUsername:"emmabrown"},
+    {followersImage:profile2,followersName:"Jane Doe", followersUsername:"janedoe"},
+    {followersImage:profile3,followersName:"Dylan Brooks", followersUsername:"dylanbrooks"},
+    {followersImage:profile4,followersName:"Grace Taylor", followersUsername:"gracetaylor"},
+    {followersImage:profile5,followersName:"Luke Harisson", followersUsername:"lukeharisson"},
+];
+
+

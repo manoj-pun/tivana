@@ -146,7 +146,7 @@ const UserSavedPosts = () => {
         </div>
       </div>
 
-      <div className="absolute top-10 right-20">
+      <div className="absolute top-13 right-42">
         <img
           src={assets.cross_icon}
           alt="Close"
