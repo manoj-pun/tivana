@@ -21,7 +21,16 @@ const UserSavedPosts = () => {
   const [activeTab, setActiveTab] = useState("comments");
   const [postDetails, setPostDetails] = useState(null);
   const [savedPosts, setSavedPosts] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Get all saved posts from postData
   useEffect(() => {
@@ -60,16 +69,15 @@ const UserSavedPosts = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-2 md:p-4"
       role="dialog"
       aria-labelledby="saved-post-modal-title"
     >
       <div
-        className="bg-[#1a1a1a] rounded-lg w-full max-w-5xl flex"
-        style={{ height: "85vh", maxHeight: "85vh" }}
+        className="bg-[#1a1a1a] rounded-lg w-full h-full md:w-full md:max-w-5xl md:h-[85vh] md:max-h-[85vh] flex flex-col md:flex-row"
       >
         {/* Left: Image Section */}
-        <div className="w-1/2 h-full flex items-center justify-center overflow-hidden bg-black border border-[#262626]">
+        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex items-center justify-center overflow-hidden bg-black border border-[#262626]`}>
           <img
             src={postDetails.thumbnail || assets.pokhara}
             alt="Saved Post"
@@ -78,7 +86,7 @@ const UserSavedPosts = () => {
         </div>
 
         {/* Right: Content Area */}
-        <div className="w-1/2 flex flex-col h-full">
+        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex flex-col`}>
           {/* Tab Buttons */}
           <div className="flex border-b border-gray-700 bg-[#1a1a1a] z-10">
             <button
@@ -144,16 +152,17 @@ const UserSavedPosts = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="absolute top-13 right-42">
-        <img
-          src={assets.cross_icon}
-          alt="Close"
-          className="w-5 cursor-pointer"
-          onClick={() => setShowUserSavedPosts(false)}
-          aria-label="Close modal"
-        />
+        {/* Close button */}
+        <div className={`absolute ${isMobile ? 'top-2 right-2' : 'top-13 right-44'}`}>
+          <img
+            src={assets.cross_icon}
+            alt="Close"
+            className="w-5 cursor-pointer"
+            onClick={() => setShowUserSavedPosts(false)}
+            aria-label="Close modal"
+          />
+        </div>
       </div>
     </div>
   );
