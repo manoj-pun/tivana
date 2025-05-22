@@ -62,7 +62,6 @@ export const AppContextProvider = (props) => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(backendUrl + "/api/posts/get-all-posts");
-      console.log("Fetched posts:", data.posts); // Debug
       if (data.success) {
         setPostData(data.posts);
       } else {
@@ -241,11 +240,6 @@ export const AppContextProvider = (props) => {
     }
   }, [isLoggedIn]);
 
-  useEffect(() => {
-  if (userData) {
-    console.log("Updated userData:", userData);
-  }
-}, [userData]);
 
   const value = {
     backendUrl,
