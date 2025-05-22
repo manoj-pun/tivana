@@ -16,6 +16,8 @@ import save from "./save.png";
 import saveFilled from "./saveFilled.png";
 import search from "./search.png";
 import searchFilled from "./searchFilled.png";
+import create from "./create.png";
+import createFilled from "./createFilled.png";
 import send from "./send.png";
 import cross_icon from "./cross_icon.png";
 import downArrow from "./down-arrow.png";
@@ -85,6 +87,8 @@ export const assets = {
     saveFilled,
     search,
     searchFilled,
+    create,
+    createFilled,
     send,
     cross_icon,
     upArrow,

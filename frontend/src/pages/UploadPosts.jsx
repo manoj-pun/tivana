@@ -159,9 +159,10 @@ const UploadPosts = () => {
       formData
     );
 
+    await getPostData();
+    
     toast.success(data.message);
 
-    await getPostData();
     navigate(`/${userData.username}`);
   } catch (error) {
     if (error.response?.data?.message) {

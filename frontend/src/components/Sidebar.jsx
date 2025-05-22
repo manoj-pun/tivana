@@ -29,6 +29,8 @@ const Sidebar = () => {
       setActiveNavLink("messages");
     } else if (path === "notifications") {
       setActiveNavLink("notifications");
+    } else if (path === "upload-post"){
+      setActiveNavLink("upload-post")
     } else if (path === "menu") {
       setActiveNavLink("menu");
     } else {
@@ -188,6 +190,25 @@ const Sidebar = () => {
               className="w-6 h-6"
             />
             <p className="max-sm:hidden ml-2">Notifications</p>
+          </div>
+
+          {/* Create post div */}
+          <div
+            className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${
+              activeNavLink === "upload-post"
+                ? "text-[#32CD32] font-semibold"
+                : "text-white"
+            }`}
+            onClick={() => handleNavLinkClick("upload-post", "/upload-post")}
+          >
+            <img
+              src={
+                activeNavLink === "upload-post" ? assets.createFilled : assets.create
+              }
+              alt=""
+              className="w-6 h-6"
+            />
+            <p className="max-sm:hidden ml-2">Create</p>
           </div>
 
           {/* Profile Div */}
