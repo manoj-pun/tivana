@@ -240,7 +240,7 @@ export const likePost = async (req, res) => {
         ]);
 
         return res.status(200).json({ 
-            message: "Post liked successfully",
+            message: "Post liked.",
             likeCount: post.likedBy.length + 1
         });
     } catch (error) {
@@ -271,7 +271,7 @@ export const unlikePost = async (req, res) => {
         ]);
 
         return res.status(200).json({ 
-            message: "Post unliked successfully",
+            message: "Post unliked.",
             likeCount: post.likedBy.length - 1
         });
     } catch (error) {
@@ -302,7 +302,7 @@ export const savePost = async (req, res) => {
         ]);
 
         return res.status(200).json({ 
-            message: "Post saved successfully",
+            message: "Post saved.",
             saveCount: post.savedBy.length + 1
         });
     } catch (error) {
@@ -333,7 +333,7 @@ export const unsavePost = async (req, res) => {
         ]);
 
         return res.status(200).json({ 
-            message: "Post unsaved successfully",
+            message: "Post unsaved.",
             saveCount: post.savedBy.length - 1
         });
     } catch (error) {
@@ -385,7 +385,7 @@ export const addComment = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: "Comment added successfully",
+            message: "Comment added.",
             comment: populatedComment
         });
 

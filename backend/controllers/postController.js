@@ -77,7 +77,7 @@ export const uploadPost = async (req, res) => {
     newPost.dropdowns = createdDropdowns;
     await newPost.save();
 
-    return res.status(201).json({success: true,message: "Post uploaded successfully!",post: newPost,
+    return res.status(201).json({success: true,message: "Post uploaded.",post: newPost,
       dropdowns: createdDropdowns,
     });
   } catch (error) {
@@ -168,7 +168,7 @@ export const deletePost = async (req, res) => {
 
     return res.status(200).json({ 
       success: true, 
-      message: "Post and all associated data deleted successfully." 
+      message: "Post and all associated data deleted." 
     });
 
   } catch (error) {
