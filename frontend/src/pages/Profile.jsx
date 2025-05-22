@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 const Profile = () => {
   const {
@@ -49,7 +50,7 @@ const Profile = () => {
   }, [username, userData, setCurrentUser, backendUrl]);
 
   if (isLoading) {
-    return <div className="text-white text-center pt-10">Loading...</div>;
+    return <Loading/>;
   }
 
   if (!profileData) {
@@ -75,97 +76,102 @@ const Profile = () => {
   return (
     <div className="text-white pt-10 flex flex-col items-center">
       {/* Profile Header */}
-      <div className="border-b-2 pb-8 flex flex-col items-center w-full max-w-4xl">
-        <div className="flex gap-16 items-start">
-          <div className="shrink-0">
-            {/* Only make profile image clickable for current user */}
-            {isCurrentUser ? (
-              <div onClick={() => setShowUploadProfilePicture(true)}>
-                <img
-                  src={profileData.profileImage || assets.defaultprofile}
-                  className="w-44 h-44 rounded-full object-cover cursor-pointer"
-                  alt="Profile"
-                />
-              </div>
-            ) : (
-              <img
-                src={profileData.profileImage || assets.defaultprofile}
-                className="w-44 h-44 rounded-full object-cover"
-                alt="Profile"
-              />
-            )}
-          </div>
-
-          <div className="flex flex-col gap-y-3 flex-1">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="flex gap-1 items-center">
-                <span className="text-[18px]">{profileData.username}</span>
-                {profileData.isVerified && (
-                  <img
-                    src={assets.verified}
-                    alt="Verified"
-                    className="w-6 h-6"
-                    title="Verified account"
-                  />
-                )}
-              </div>
-              {isCurrentUser ? (
-                <button
-                  onClick={() =>
-                    navigate("/edit-profile", {
-                      state: {
-                        username: profileData.username,
-                        fullname: profileData.fullname,
-                        userBio: profileData.userBio,
-                        profileImage: profileData.profileImage,
-                      },
-                    })
-                  }
-                  className="bg-[#808080] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer"
-                >
-                  Edit profile
-                </button>
-              ) : (
-                <button className="bg-[#334fda] px-[12px] py-[6px] font-medium text-[14px] rounded cursor-pointer">
-                  Follow
-                </button>
-              )}
-            </div>
-
-            <div className="flex gap-4 text-sm">
-              <span className="font-semibold">
-                {userPosts.length} <span className="text-[#808080]">posts</span>
-              </span>
-              <span
-                className="font-semibold cursor-pointer"
-                onClick={() => setShowFollowers(true)}
-              >
-                {profileData.followersCount || 0}{" "}
-                <span className="text-[#808080]">followers</span>
-              </span>
-              <span
-                className="font-semibold cursor-pointer"
-                onClick={() => setShowFollowing(true)}
-              >
-                {profileData.followingCount || 0}{" "}
-                <span className="text-[#808080]">following</span>
-              </span>
-            </div>
-
-            {profileData?.fullname && (
-              <div>
-                <span className="font-semibold">{profileData.fullname}</span>
-              </div>
-            )}
-
-            <div className="w-[400px]">
-              <p className="text-[14px] leading-relaxed">
-                {profileData.userBio || "No bio yet."}
-              </p>
-            </div>
-          </div>
+      <div className="border-b-2 pb-8 flex flex-col items-center w-full max-w-4xl px-4 sm:px-6">
+  <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-16 items-center sm:items-start w-full">
+    {/* Profile Image */}
+    <div className="shrink-0">
+      {isCurrentUser ? (
+        <div onClick={() => setShowUploadProfilePicture(true)}>
+          <img
+            src={profileData.profileImage || assets.defaultprofile}
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full object-cover cursor-pointer"
+            alt="Profile"
+          />
         </div>
+      ) : (
+        <img
+          src={profileData.profileImage || assets.defaultprofile}
+          className="w-32 h-32 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full object-cover"
+          alt="Profile"
+        />
+      )}
+    </div>
+
+    {/* Profile Info */}
+    <div className="flex flex-col gap-y-2 sm:gap-y-3 flex-1 w-full sm:w-auto">
+      {/* Username and Action Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-1 sm:mb-2">
+        <div className="flex gap-1 items-center justify-center sm:justify-start">
+          <span className="text-[16px] sm:text-[18px]">{profileData.username}</span>
+          {profileData.isVerified && (
+            <img
+              src={assets.verified}
+              alt="Verified"
+              className="w-5 h-5 sm:w-6 sm:h-6"
+              title="Verified account"
+            />
+          )}
+        </div>
+        {isCurrentUser ? (
+          <button
+            onClick={() =>
+              navigate("/edit-profile", {
+                state: {
+                  username: profileData.username,
+                  fullname: profileData.fullname,
+                  userBio: profileData.userBio,
+                  profileImage: profileData.profileImage,
+                },
+              })
+            }
+            className="bg-[#808080] px-3 py-1 sm:px-[12px] sm:py-[6px] font-medium text-[14px] rounded cursor-pointer"
+          >
+            Edit profile
+          </button>
+        ) : (
+          <button className="bg-[#334fda] px-3 py-1 sm:px-[12px] sm:py-[6px] font-medium text-[14px] rounded cursor-pointer">
+            Follow
+          </button>
+        )}
       </div>
+
+      {/* Stats */}
+      <div className="flex justify-center sm:justify-start gap-3 sm:gap-4 text-sm mb-2 sm:mb-0">
+        <span className="font-semibold">
+          {userPosts.length} <span className="text-[#808080]">posts</span>
+        </span>
+        <span
+          className="font-semibold cursor-pointer"
+          onClick={() => setShowFollowers(true)}
+        >
+          {profileData.followersCount || 0}{" "}
+          <span className="text-[#808080]">followers</span>
+        </span>
+        <span
+          className="font-semibold cursor-pointer"
+          onClick={() => setShowFollowing(true)}
+        >
+          {profileData.followingCount || 0}{" "}
+          <span className="text-[#808080]">following</span>
+        </span>
+      </div>
+
+      {/* Full Name */}
+      {profileData?.fullname && (
+        <div className="text-center sm:text-left">
+          <span className="font-semibold">{profileData.fullname}</span>
+        </div>
+      )}
+
+      {/* Bio */}
+      <div className="w-full sm:w-[400px] text-center sm:text-left">
+        <p className="text-[14px] leading-relaxed">
+          {profileData.userBio || "No bio yet."}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* Tabs Section */}
       <div className="flex w-fit m-auto items-center justify-center gap-4 mt-8">
@@ -256,7 +262,7 @@ const Profile = () => {
                   </p>
                 </>
               ) : (
-                <div>This user hasn't posted anything yet.</div>
+                <div>No posts available.</div>
               )}
             </div>
           )

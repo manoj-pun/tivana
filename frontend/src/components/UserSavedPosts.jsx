@@ -154,7 +154,7 @@ const UserSavedPosts = () => {
         </div>
 
         {/* Close button */}
-        <div className={`absolute ${isMobile ? 'top-2 right-2' : 'top-13 right-44'}`}>
+        <div className={`absolute ${isMobile ? 'top-2 right-2' : 'top-13 right-42'}`}>
           <img
             src={assets.cross_icon}
             alt="Close"

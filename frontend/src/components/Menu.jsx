@@ -11,22 +11,27 @@ const Menu = () => {
 
   const {backendUrl,setUserData,setIsLoggedIn,setShowMenu} = useContext(AppContext)
 
-  const logout = async() => {
-    try{
-      axios.defaults.withCredentials = true
+  const logout = async () => {
+  try {
+    axios.defaults.withCredentials = true;
 
-      const {data} = await axios.post(backendUrl + "/api/auth/logout-user")
+    // Clear recent searches in localStorage
+    localStorage.removeItem('recentSearches');
 
-      if (data.success) {
-        setIsLoggedIn(false);
-        setUserData(false);
-        setShowMenu(false);
-        navigate("/");
-      }
-    }catch(error){
-      toast.error(error.message)
+    // Perform logout
+    const { data } = await axios.post(`${backendUrl}/api/auth/logout-user`);
+
+    if (data.success) {
+      setIsLoggedIn(false);
+      setUserData(null);
+      setShowMenu(false);
+      navigate('/');
+      toast.success('Logged Out');
     }
+  } catch (error) {
+    toast.error(error.response?.data?.message || 'Failed to log out');
   }
+};
 
   return (
     <div className='flex text-white fixed left-0 right-0 bottom-37'>

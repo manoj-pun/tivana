@@ -92,74 +92,87 @@ const UploadPosts = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // if (!thumbnailFile) {
-    //   toast.error("Please upload a thumbnail image.");
-    // }
+  // Track if there are any validation errors
+  let hasErrors = false;
 
-    // if (!description.trim()) {
-    //   toast.error("Description is required.");
-    // }
+  // Validate thumbnail (optional, uncomment if required)
+  // if (!thumbnailFile) {
+  //   toast.error("Please upload a thumbnail image.");
+  //   hasErrors = true;
+  // }
 
-    if (dropdowns.length > 0) {
-      for (const [index, dropdown] of dropdowns.entries()) {
-        if (!dropdown.title.trim()) {
-          toast.error(`Title missing for Dropdown ${index + 1}`);
-        }
-        if (dropdown.dropdownImageFiles.length === 0) {
-          toast.error(
-            `At least one image is required for Dropdown ${index + 1}`
-          );
-        }
-        if (!dropdown.description.trim()) {
-          toast.error(`Description is required for Dropdown ${index + 1}`);
-        }
+  // Validate description (optional, uncomment if required)
+  // if (!description.trim()) {
+  //   toast.error("Description is required.");
+  //   hasErrors = true;
+  // }
+
+  // Validate dropdowns
+  if (dropdowns.length > 0) {
+    for (const [index, dropdown] of dropdowns.entries()) {
+      if (!dropdown.title.trim()) {
+        toast.error(`Title missing for Dropdown ${index + 1}`);
+        hasErrors = true;
+      }
+      if (dropdown.dropdownImageFiles.length === 0) {
+        toast.error(`At least one image is required for Dropdown ${index + 1}`);
+        hasErrors = true;
+      }
+      if (!dropdown.description.trim()) {
+        toast.error(`Description is required for Dropdown ${index + 1}`);
+        hasErrors = true;
       }
     }
+  }
 
-    try {
+  // Prevent submission if there are any errors
+  if (hasErrors) {
+    return; // Stop the function here if there are errors
+  }
 
-      setIsLoading(true)
+  try {
+    setIsLoading(true);
 
-      const formData = new FormData();
-      formData.append("description", description);
-      formData.append("thumbnailImage", thumbnailFile);
+    const formData = new FormData();
+    formData.append("description", description);
+    formData.append("thumbnailImage", thumbnailFile);
 
-      const dropdownData = dropdowns.map((dropdown) => ({
-        title: dropdown.title,
-        subtitle: dropdown.subtitle,
-        description: dropdown.description,
-        imageCount: dropdown.dropdownImageFiles.length,
-      }));
+    const dropdownData = dropdowns.map((dropdown) => ({
+      title: dropdown.title,
+      subtitle: dropdown.subtitle,
+      description: dropdown.description,
+      imageCount: dropdown.dropdownImageFiles.length,
+    }));
 
-      formData.append("dropdown", JSON.stringify(dropdownData));
+    formData.append("dropdown", JSON.stringify(dropdownData));
 
-      dropdowns.forEach((dropdown) => {
-        dropdown.dropdownImageFiles.forEach((file) => {
-          formData.append("dropdownImages", file);
-        });
+    dropdowns.forEach((dropdown) => {
+      dropdown.dropdownImageFiles.forEach((file) => {
+        formData.append("dropdownImages", file);
       });
+    });
 
-      const { data } = await axios.post(
-        backendUrl + "/api/posts/upload-post",
-        formData
-      );
+    const { data } = await axios.post(
+      backendUrl + "/api/posts/upload-post",
+      formData
+    );
 
-      toast.success(data.message);
+    toast.success(data.message);
 
-      await getPostData();
-      navigate(`/${userData.username}`);
-    } catch (error) {
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error(error.message || "Failed to upload post");
-      }
-    }finally{
-      setIsLoading(false)
+    await getPostData();
+    navigate(`/${userData.username}`);
+  } catch (error) {
+    if (error.response?.data?.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error(error.message || "Failed to upload post");
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="flex items-center justify-center p-10 gap-2">
