@@ -79,7 +79,7 @@ export const AppContextProvider = (props) => {
   const likePost = async (postId) => {
     try {
       const { data } = await axios.post(backendUrl + `/api/user/like-post/${postId}`);
-      if (data.message === "Post liked successfully") {
+      if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>
@@ -104,7 +104,7 @@ export const AppContextProvider = (props) => {
   const unlikePost = async (postId) => {
     try {
       const { data } = await axios.post(backendUrl + `/api/user/unlike-post/${postId}`);
-      if (data.message === "Post unliked successfully") {
+      if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>
@@ -133,7 +133,7 @@ export const AppContextProvider = (props) => {
   const savePost = async (postId) => {
     try {
       const { data } = await axios.post(backendUrl + `/api/user/save-post/${postId}`);
-      if (data.message === "Post saved successfully") {
+      if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>
@@ -158,7 +158,7 @@ export const AppContextProvider = (props) => {
   const unsavePost = async (postId) => {
     try {
       const { data } = await axios.post(backendUrl + `/api/user/unsave-post/${postId}`);
-      if (data.message === "Post unsaved successfully") {
+      if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>

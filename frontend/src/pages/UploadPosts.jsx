@@ -94,13 +94,13 @@ const UploadPosts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!thumbnailFile) {
-      toast.error("Please upload a thumbnail image.");
-    }
+    // if (!thumbnailFile) {
+    //   toast.error("Please upload a thumbnail image.");
+    // }
 
-    if (!description.trim()) {
-      toast.error("Description is required.");
-    }
+    // if (!description.trim()) {
+    //   toast.error("Description is required.");
+    // }
 
     if (dropdowns.length > 0) {
       for (const [index, dropdown] of dropdowns.entries()) {

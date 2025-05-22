@@ -29,10 +29,10 @@ const Menu = () => {
   }
 
   return (
-    <div onClick={logout} className='flex text-white fixed left-0 right-0 bottom-37'>
-      <span oncli className='max-sm:hidden px-3 bg-[#393939] py-3 w-[230px] h-[50px] rounded ml-2.5 cursor-pointer'>Logout</span>
+    <div className='flex text-white fixed left-0 right-0 bottom-37'>
+      <span onClick={logout} className='max-sm:hidden px-3 bg-[#393939] py-3 w-[230px] h-[50px] rounded ml-2.5 cursor-pointer'>Logout</span>
 
-      <img src={assets.logout} className='w-10 h-10 sm:hidden bg-[#393939] p-2 fixed left-4 bottom-38 cursor-pointer rounded'/>
+      <img onClick={logout} src={assets.logout} className='w-10 h-10 sm:hidden bg-[#393939] p-2 fixed left-4 bottom-38 cursor-pointer rounded'/>
     </div>
   )
 }
