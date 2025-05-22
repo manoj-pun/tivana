@@ -72,7 +72,7 @@ const Login = () => {
       </div>
 
       {/* Image Side */}
-      <div className="hidden md:block w-1/2 flex justify-center items-center p-12">
+      <div className="hidden md:flex w-1/2 justify-center items-center p-12">
         <img
           src={assets.loginCover}
           alt="Login Cover"
