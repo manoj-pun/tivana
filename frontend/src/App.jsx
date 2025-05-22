@@ -21,22 +21,34 @@ import UploadPosts from "./pages/UploadPosts";
 import UploadProfilePicture from "./components/UploadProfilePicture";
 import EditProfile from "./components/EditProfile";
 import Loading from "./components/Loading";
-import NotFound from "./components/NotFound";
+import NotFound from "./pages/NotFound";
 import DeletePost from "./components/DeletePost";
 
-
 const App = () => {
-  const { isLoggedIn, showSearch, showNotifications, showMenu, showSend, showFollowers, showFollowing, showComment, showUserUploadedPosts, showUserSavedPosts,showUploadProfilePicture,isLoading, showDeletePost } = useContext(AppContext);
+  const {
+    isLoggedIn,
+    showSearch,
+    showNotifications,
+    showMenu,
+    showSend,
+    showFollowers,
+    showFollowing,
+    showComment,
+    showUserUploadedPosts,
+    showUserSavedPosts,
+    showUploadProfilePicture,
+    isLoading,
+    showDeletePost,
+  } = useContext(AppContext);
 
   return (
     <>
-      <ToastContainer/>
-      {isLoading && <Loading/>}
+      <ToastContainer />
+      {isLoading && <Loading />}
 
       {isLoggedIn ? (
         <div className="flex">
           <Sidebar />
-
           <div className="flex-1 ml-[250px] max-sm:ml-[70px]">
             {showSearch && <Search />}
             {showNotifications && <Notifications />}
@@ -47,25 +59,26 @@ const App = () => {
             {showComment && <Comment />}
             {showUserUploadedPosts && <UserUploadedPosts />}
             {showUserSavedPosts && <UserSavedPosts />}
-            {showUploadProfilePicture && <UploadProfilePicture/>}
-            {showDeletePost && <DeletePost/>}
+            {showUploadProfilePicture && <UploadProfilePicture />}
+            {showDeletePost && <DeletePost />}
 
             <Routes>
               <Route path="/home" element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/:username" element={<Profile />} />
-              <Route path="/upload-post" element={<UploadPosts/>} />
-              <Route path="/edit-profile" element={<EditProfile/>} />
-
+              <Route path="/upload-post" element={<UploadPosts />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
               {/* Handle undefined routes */}
-              <Route path="*" element={<NotFound/>} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </div>
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />
+          {/* Redirect undefined routes to Login or show NotFound */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       )}
     </>
