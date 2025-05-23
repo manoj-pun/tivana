@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, replace } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import { AppContext } from "./context/AppContext";
 import Search from "./components/Search";
@@ -76,7 +76,7 @@ const App = () => {
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="*" element={<NotFound />} /> {/* Catch-all for non-logged-in users */}
+          <Route path="*" element={<NotFound/>} /> {/* Catch-all for non-logged-in users */}
         </Routes>
       )}
     </>
