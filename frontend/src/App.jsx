@@ -21,8 +21,8 @@ import UploadPosts from "./pages/UploadPosts";
 import UploadProfilePicture from "./components/UploadProfilePicture";
 import EditProfile from "./components/EditProfile";
 import Loading from "./components/Loading";
-import NotFound from "./pages/NotFound";
 import DeletePost from "./components/DeletePost";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const {
@@ -66,19 +66,17 @@ const App = () => {
               <Route path="/home" element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/messages" element={<Messages />} />
-              <Route path="/:username" element={<Profile />} />
               <Route path="/upload-post" element={<UploadPosts />} />
               <Route path="/edit-profile" element={<EditProfile />} />
-              {/* Handle undefined routes */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="/:username" element={<Profile />} />
+              <Route path="*" element={<NotFound />} /> {/* Catch-all for logged-in users */}
             </Routes>
           </div>
         </div>
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />
-          {/* Redirect undefined routes to Login or show NotFound */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} /> {/* Catch-all for non-logged-in users */}
         </Routes>
       )}
     </>

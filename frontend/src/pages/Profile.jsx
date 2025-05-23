@@ -4,11 +4,12 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import Loading from "../components/Loading";
+import NotFound from "./NotFound";
 
 const Profile = () => {
   const {
     setShowFollowers,
-    setShowFollowing,
+    setShowFollowing, 
     setCurrentUser,
     setShowUserUploadedPosts,
     setShowUserSavedPosts,
@@ -27,27 +28,28 @@ const Profile = () => {
 
   // Fetch profile data when username changes
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await axios.get(`${backendUrl}/api/user/${username}`);
+  const fetchProfileData = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(`${backendUrl}/api/user/${username}`);
 
-        if (data) {
-          setProfileData(data);
-          // If viewing own profile, update current user
-          if (userData && userData.username === username) {
-            setCurrentUser(data);
-          }
+      if (data) {
+        setProfileData(data);
+        if (userData && userData.username === username) {
+          setCurrentUser(data);
         }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      navigate("*"); // 👈 Redirect to 404 page
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchProfileData();
-  }, [username, userData, setCurrentUser, backendUrl]);
+  fetchProfileData();
+}, [username, userData, setCurrentUser, backendUrl]);
+
 
   if (isLoading) {
     return <Loading/>;

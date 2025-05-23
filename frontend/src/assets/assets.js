@@ -32,6 +32,7 @@ import notfound from "./404.svg"
 import Upload from "./add.png"
 import verified from "./verified.png"
 import logout from "./logout.png"
+import logoMain from "./logo.svg"
 
 import profile from "./profile.jpeg"
 import check from "./check.jpeg"
@@ -105,7 +106,8 @@ export const assets = {
     notfound,
     Upload,
     verified,
-    logout
+    logout,
+    logoMain
 };
 
 export const searchData = [

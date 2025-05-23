@@ -56,19 +56,13 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black px-4 sm:px-6 lg:px-8">
       {/* Logo */}
-      <div
-        className={`absolute top-8 left-8 sm:left-16 flex items-center gap-3 group ${
-          state === 'Sign Up' ? 'max-sm:hidden' : ''
-        }`}
-      >
+      <div className={`absolute top-8 left-8 sm:left-16 flex items-center gap-3 group ${state === 'Sign Up' ? 'max-sm:hidden' : ''}`}>
         <img
           src={assets.logo}
           alt="Tivana Logo"
           className="w-10 h-10 rounded cursor-pointer transition-all duration-300 group-hover:scale-110"
         />
-        <p className="hidden sm:block font-serif italic text-2xl cursor-pointer text-white font-medium tracking-wide">
-          Tivana
-        </p>
+        <img src={assets.logoMain} alt="" className="hidden sm:block cursor-pointer w-24 h-20"/>
       </div>
 
       {/* Image Side */}

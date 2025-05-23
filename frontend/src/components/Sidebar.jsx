@@ -90,9 +90,7 @@ const Sidebar = () => {
               alt=""
               className="w-10 h-8 sm:hidden rounded cursor-pointer"
             />
-            <p onClick={() => navigate("/home")} className="max-sm:hidden pl-12 font-serif italic text-2xl cursor-pointer text-white">
-              Tivana
-            </p>
+            <img src={assets.logoMain} alt="" onClick={() => navigate("/home")} className="max-sm:hidden pl-11 cursor-pointer w-40 h-20"/>
           </div>
 
           {/* Home Div */}
