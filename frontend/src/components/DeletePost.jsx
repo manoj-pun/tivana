@@ -66,7 +66,7 @@ const DeletePost = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <div className='fixed top-22 left-80 z-50'>
+      <div className='fixed top-22 left-56 z-50'>
         <div className='bg-[#212121] px-4 py-4 flex flex-col text-center gap-3 w-96 rounded-xl'>
           <h1
             className='text-red-700 font-semibold cursor-pointer rounded'
