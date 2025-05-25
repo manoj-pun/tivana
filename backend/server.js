@@ -18,7 +18,7 @@ connectDB()
 
 connectCloudinary()
 
-const allowedOrigins = ["http://localhost:5173"]
+const allowedOrigins = process.env.FRONTENDURL
 
 app.use(cookieParser());
 app.use(express.json())
