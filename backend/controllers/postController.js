@@ -12,16 +12,26 @@ export const uploadPost = async (req, res) => {
     const userId = req.user.id;
 
     if (!description || !thumbnailImage) {
-      return res.status(400).json({success: false,message: "Description and thumbnail are required."});
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Description and thumbnail are required.",
+        });
     }
 
     const user = await userModel.findById(userId);
-    if (!user) {return res.status(404).json({success: false,message: "User not found."});
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
     }
 
     // Upload thumbnail
     const thumbnailResult = await cloudinary.uploader.upload(
-      `data:${thumbnailImage.mimetype};base64,${thumbnailImage.buffer.toString("base64")}`,
+      `data:${thumbnailImage.mimetype};base64,${thumbnailImage.buffer.toString(
+        "base64"
+      )}`,
       {
         folder: `tivana/users/${user.username}/profileInfo/UserProfileThumbnail`,
         resource_type: "auto",
@@ -77,18 +87,24 @@ export const uploadPost = async (req, res) => {
     newPost.dropdowns = createdDropdowns;
     await newPost.save();
 
-    return res.status(201).json({success: true,message: "Post uploaded.",post: newPost,
-      dropdowns: createdDropdowns,
-    });
+    return res
+      .status(201)
+      .json({
+        success: true,
+        message: "Post uploaded.",
+        post: newPost,
+        dropdowns: createdDropdowns,
+      });
   } catch (error) {
-    return res.status(500).json({success: false,message: error.message});
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 //get all the posts
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await postModel.find()
+    const posts = await postModel
+      .find()
       .populate("userId", "fullname username profileImage isVerified")
       .populate("dropdowns")
       .populate({
@@ -96,8 +112,8 @@ export const getAllPosts = async (req, res) => {
         options: { sort: { createdAt: -1 } }, // Sort comments newest first
         populate: {
           path: "userId",
-          select: "username profileImage isVerified"
-        }
+          select: "username profileImage isVerified",
+        },
       })
       .sort({ createdAt: -1 });
 
@@ -134,19 +150,20 @@ export const deletePost = async (req, res) => {
 
   try {
     // Find post and populate dropdowns
-    const post = await postModel.findById(id).populate('dropdowns');
-    
+    const post = await postModel.findById(id).populate("dropdowns");
+
     if (!post) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Post not found." 
+      return res.status(404).json({
+        success: false,
+        message: "Post not found.",
       });
     }
 
     // Delete thumbnail from Cloudinary
     if (post.thumbnailPublicId) {
-      await cloudinary.uploader.destroy(post.thumbnailPublicId)
-        .catch(err => console.error("Error deleting thumbnail:", err));
+      await cloudinary.uploader
+        .destroy(post.thumbnailPublicId)
+        .catch((err) => console.error("Error deleting thumbnail:", err));
     }
 
     // Delete all dropdown images from Cloudinary
@@ -154,28 +171,31 @@ export const deletePost = async (req, res) => {
       for (const dropdown of post.dropdowns) {
         // Delete each image in the dropdown
         for (const image of dropdown.images) {
-          await cloudinary.uploader.destroy(image.publicId)
-            .catch(err => console.error("Error deleting dropdown image:", err));
+          await cloudinary.uploader
+            .destroy(image.publicId)
+            .catch((err) =>
+              console.error("Error deleting dropdown image:", err)
+            );
         }
         // Delete the dropdown document
-        await dropdownModel.findByIdAndDelete(dropdown._id)
-          .catch(err => console.error("Error deleting dropdown:", err));
+        await dropdownModel
+          .findByIdAndDelete(dropdown._id)
+          .catch((err) => console.error("Error deleting dropdown:", err));
       }
     }
 
     // Finally delete the post
     await postModel.findByIdAndDelete(id);
 
-    return res.status(200).json({ 
-      success: true, 
-      message: "Post and all associated data deleted." 
+    return res.status(200).json({
+      success: true,
+      message: "Post and all associated data deleted.",
     });
-
   } catch (error) {
     console.error("Delete post error:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: error.message || "Failed to delete post" 
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to delete post",
     });
   }
 };

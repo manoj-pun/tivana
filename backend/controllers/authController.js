@@ -7,7 +7,12 @@ import { validateLoginInput } from "../utils/authValidate.js";
 export const registerUser = async (req, res) => {
   const { username, fullname, email, password } = req.body;
 
-  const validationError = validateRegisterInput({ username, fullname, email, password });
+  const validationError = validateRegisterInput({
+    username,
+    fullname,
+    email,
+    password,
+  });
   if (validationError) {
     return res.json({ success: false, message: validationError });
   }
@@ -37,9 +42,13 @@ export const registerUser = async (req, res) => {
 
     await user.save();
 
-    const token = jwt.sign({ id: user._id,username: user.username }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -78,7 +87,7 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
-    
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -108,10 +117,10 @@ export const logoutUser = async (req, res) => {
 };
 
 //check if the user is authenticated
-export const isAuthenticated = async(req,res) => {
+export const isAuthenticated = async (req, res) => {
   try {
-      return res.json({success:true})
+    return res.json({ success: true });
   } catch (error) {
-      res.json({success:false,message:error.message})
+    res.json({ success: false, message: error.message });
   }
-}
+};
