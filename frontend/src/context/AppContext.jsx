@@ -21,13 +21,14 @@ export const AppContextProvider = (props) => {
   const [showUserUploadedPosts, setShowUserUploadedPosts] = useState(false);
   const [showUserSavedPosts, setShowUserSavedPosts] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [showUploadProfilePicture, setShowUploadProfilePicture] = useState(false);
+  const [showUploadProfilePicture, setShowUploadProfilePicture] =
+    useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [postData, setPostData] = useState(null);
-  const [showDeletePost,setShowDeletePost] = useState(false)
+  const [showDeletePost, setShowDeletePost] = useState(false);
 
   const getAuthState = async () => {
     try {
@@ -77,13 +78,19 @@ export const AppContextProvider = (props) => {
   // Like a post
   const likePost = async (postId) => {
     try {
-      const { data } = await axios.post(backendUrl + `/api/user/like-post/${postId}`);
+      const { data } = await axios.post(
+        backendUrl + `/api/user/like-post/${postId}`
+      );
       if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
-              ? { ...post, likedBy: [...post.likedBy, userData._id], likeCount: data.likeCount }
+              ? {
+                  ...post,
+                  likedBy: [...post.likedBy, userData._id],
+                  likeCount: data.likeCount,
+                }
               : post
           )
         );
@@ -102,7 +109,9 @@ export const AppContextProvider = (props) => {
   // Unlike a post
   const unlikePost = async (postId) => {
     try {
-      const { data } = await axios.post(backendUrl + `/api/user/unlike-post/${postId}`);
+      const { data } = await axios.post(
+        backendUrl + `/api/user/unlike-post/${postId}`
+      );
       if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
@@ -131,13 +140,19 @@ export const AppContextProvider = (props) => {
   // Save a post
   const savePost = async (postId) => {
     try {
-      const { data } = await axios.post(backendUrl + `/api/user/save-post/${postId}`);
+      const { data } = await axios.post(
+        backendUrl + `/api/user/save-post/${postId}`
+      );
       if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
           prev.map((post) =>
             post._id === postId
-              ? { ...post, savedBy: [...post.savedBy, userData._id], saveCount: data.saveCount }
+              ? {
+                  ...post,
+                  savedBy: [...post.savedBy, userData._id],
+                  saveCount: data.saveCount,
+                }
               : post
           )
         );
@@ -156,7 +171,9 @@ export const AppContextProvider = (props) => {
   // Unsave a post
   const unsavePost = async (postId) => {
     try {
-      const { data } = await axios.post(backendUrl + `/api/user/unsave-post/${postId}`);
+      const { data } = await axios.post(
+        backendUrl + `/api/user/unsave-post/${postId}`
+      );
       if (data.message) {
         toast.success(data.message);
         setPostData((prev) =>
@@ -240,7 +257,6 @@ export const AppContextProvider = (props) => {
     }
   }, [isLoggedIn]);
 
-
   const value = {
     backendUrl,
     isLoggedIn,
@@ -284,9 +300,9 @@ export const AppContextProvider = (props) => {
     savePost,
     unsavePost,
     addComment,
-    getComments,  
+    getComments,
     showDeletePost,
-    setShowDeletePost
+    setShowDeletePost,
   };
 
   return (

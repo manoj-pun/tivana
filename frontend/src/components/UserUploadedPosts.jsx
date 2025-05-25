@@ -6,8 +6,14 @@ import Dropdown from "./Dropdown";
 import DeletePost from "./DeletePost";
 
 const UserUploadedPosts = () => {
-  const { currentUser, selectedPost, setShowUserUploadedPosts, postData, showDeletePost, setShowDeletePost } =
-    useContext(AppContext);
+  const {
+    currentUser,
+    selectedPost,
+    setShowUserUploadedPosts,
+    postData,
+    showDeletePost,
+    setShowDeletePost,
+  } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState("comments");
   const [postDetails, setPostDetails] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -16,8 +22,8 @@ const UserUploadedPosts = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -28,15 +34,20 @@ const UserUploadedPosts = () => {
   }, [selectedPost, postData]);
 
   // Check if the current user is the post owner
-  const isPostOwner = currentUser && selectedPost && currentUser._id === (selectedPost.userId?._id || selectedPost.userId);
+  const isPostOwner =
+    currentUser &&
+    selectedPost &&
+    currentUser._id === (selectedPost.userId?._id || selectedPost.userId);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-2 md:p-4">
-      <div
-        className="bg-[#1a1a1a] rounded-lg w-full h-full md:w-full md:max-w-5xl md:h-[85vh] md:max-h-[85vh] flex flex-col md:flex-row relative"
-      >
+      <div className="bg-[#1a1a1a] rounded-lg w-full h-full md:w-full md:max-w-5xl md:h-[85vh] md:max-h-[85vh] flex flex-col md:flex-row relative">
         {/* Left: Image Section */}
-        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex items-center justify-center overflow-hidden bg-black border border-[#262626] relative`}>
+        <div
+          className={`${
+            isMobile ? "h-1/2" : "w-1/2 h-full"
+          } flex items-center justify-center overflow-hidden bg-black border border-[#262626] relative`}
+        >
           <div className="w-full h-full flex items-center justify-center">
             <img
               src={selectedPost?.thumbnail}
@@ -60,7 +71,7 @@ const UserUploadedPosts = () => {
         </div>
 
         {/* Right: Content Area */}
-        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex flex-col`}>
+        <div className={`${isMobile ? "h-1/2" : "w-1/2 h-full"} flex flex-col`}>
           {/* Tab Buttons */}
           <div className="flex border-b border-gray-700 sticky top-0 bg-[#1a1a1a] z-10">
             <button
@@ -89,7 +100,9 @@ const UserUploadedPosts = () => {
           <div className="flex-1 overflow-hidden">
             {/* Comments Section */}
             <div
-              className={`h-full ${activeTab === "comments" ? "block" : "hidden"}`}
+              className={`h-full ${
+                activeTab === "comments" ? "block" : "hidden"
+              }`}
             >
               <div className="h-full overflow-y-auto">
                 <Comment isModal={false} />
@@ -131,13 +144,20 @@ const UserUploadedPosts = () => {
             src={assets.cross_icon}
             alt="Close"
             className="w-5 cursor-pointer"
-            onClick={() => {setShowUserUploadedPosts(false);setShowDeletePost(false)}}
+            onClick={() => {
+              setShowUserUploadedPosts(false);
+              setShowDeletePost(false);
+            }}
           />
         </div>
 
         {/* DeletePost component - toggled by the more icon */}
         {showDeletePost && isPostOwner && (
-          <div className={`absolute ${isMobile ? 'top-12 right-2' : 'top-12 right-12'} z-50`}>
+          <div
+            className={`absolute ${
+              isMobile ? "top-12 right-2" : "top-12 right-12"
+            } z-50`}
+          >
             <DeletePost />
           </div>
         )}

@@ -65,36 +65,43 @@ const Search = () => {
   };
 
   const handleUserClick = (user) => {
-  if (!user?._id || !user?.username) return;
+    if (!user?._id || !user?.username) return;
 
-  setRecentUsers((prev) => {
-    const exists = prev.find((u) => u._id.toString() === user._id.toString());
-    return exists ? prev : [user, ...prev].slice(0, 10);
-  });
+    setRecentUsers((prev) => {
+      const exists = prev.find((u) => u._id.toString() === user._id.toString());
+      return exists ? prev : [user, ...prev].slice(0, 10);
+    });
 
-  setQuery("");
-  setSearchResults([]);
+    setQuery("");
+    setSearchResults([]);
 
-  setTimeout(() => {
-    setShowSearch(false);
-    navigate(`/${user.username}`);
-  }, 100);
-};
+    setTimeout(() => {
+      setShowSearch(false);
+      navigate(`/${user.username}`);
+    }, 100);
+  };
 
   const clearAllUsers = () => {
     setRecentUsers([]);
   };
 
   const removeUser = (userId) => {
-    setRecentUsers((prev) => prev.filter((user) => user._id.toString() !== userId.toString()));
+    setRecentUsers((prev) =>
+      prev.filter((user) => user._id.toString() !== userId.toString())
+    );
   };
 
   return (
     <div className="w-90 max-sm:w-80 min-h-screen fixed top-0 bottom-0 border-r-[#262626] border-r-1 rounded-r-2xl bg-black">
       <div className="pt-8 p-3">
         <div className="flex items-center justify-between">
-        <h1 className="text-white text-[25px] font-semibold mb-4">Search</h1>
-        <img onClick={() => setShowSearch(false)} src={assets.cross_icon} alt="" className="w-5 h-5 -mt-15 cursor-pointer"/>
+          <h1 className="text-white text-[25px] font-semibold mb-4">Search</h1>
+          <img
+            onClick={() => setShowSearch(false)}
+            src={assets.cross_icon}
+            alt=""
+            className="w-5 h-5 -mt-15 cursor-pointer"
+          />
         </div>
         <input
           type="text"
@@ -111,22 +118,34 @@ const Search = () => {
       <div className="p-3 flex justify-between items-center">
         <h1 className="text-white font-semibold">Recent</h1>
         {recentUsers.length > 0 && (
-          <span className="text-[#4193EF] cursor-pointer" onClick={clearAllUsers}>
+          <span
+            className="text-[#4193EF] cursor-pointer"
+            onClick={clearAllUsers}
+          >
             Clear all
           </span>
         )}
       </div>
 
       {/* Loading indicator - appears only when searching and query exists */}
-        {isSearching && query && (
-          <div className="flex justify-center items-center">
-            <div className="loading-dots">
-              <div className="dot animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="dot animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="dot animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
+      {isSearching && query && (
+        <div className="flex justify-center items-center">
+          <div className="loading-dots">
+            <div
+              className="dot animate-bounce"
+              style={{ animationDelay: "0ms" }}
+            />
+            <div
+              className="dot animate-bounce"
+              style={{ animationDelay: "150ms" }}
+            />
+            <div
+              className="dot animate-bounce"
+              style={{ animationDelay: "300ms" }}
+            />
           </div>
-        )}
+        </div>
+      )}
 
       {query ? (
         <>
@@ -147,7 +166,11 @@ const Search = () => {
                     <div className="flex items-center gap-1">
                       <p className="text-white font-medium">{user.username}</p>
                       {user.isVerified && (
-                        <img src={assets.verified} alt="Verified" className="w-4 h-4" />
+                        <img
+                          src={assets.verified}
+                          alt="Verified"
+                          className="w-4 h-4"
+                        />
                       )}
                     </div>
                     <p className="text-[#808080] text-sm">{user.fullname}</p>
@@ -174,11 +197,18 @@ const Search = () => {
                 className="w-10 h-10 rounded-full mr-3 object-cover cursor-pointer"
                 onClick={() => handleUserClick(user)}
               />
-              <div className="cursor-pointer" onClick={() => handleUserClick(user)}>
+              <div
+                className="cursor-pointer"
+                onClick={() => handleUserClick(user)}
+              >
                 <div className="flex items-center gap-1">
                   <p className="text-white font-medium">{user.username}</p>
                   {user.isVerified && (
-                    <img src={assets.verified} alt="Verified" className="w-4 h-4" />
+                    <img
+                      src={assets.verified}
+                      alt="Verified"
+                      className="w-4 h-4"
+                    />
                   )}
                 </div>
                 <p className="text-[#808080] text-sm">{user.fullname}</p>

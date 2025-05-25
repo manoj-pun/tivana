@@ -29,8 +29,8 @@ const Sidebar = () => {
       setActiveNavLink("messages");
     } else if (path === "notifications") {
       setActiveNavLink("notifications");
-    } else if (path === "upload-post"){
-      setActiveNavLink("upload-post")
+    } else if (path === "upload-post") {
+      setActiveNavLink("upload-post");
     } else if (path === "menu") {
       setActiveNavLink("menu");
     } else {
@@ -85,12 +85,18 @@ const Sidebar = () => {
       <div className="inline-block min-h-screen border-r-[#262626] border-r-1 w-[250px] max-sm:w-[70px]">
         <ul className="flex flex-col items-start p-2 space-y-2">
           <div className="flex items-center p-3 max-sm:p-0 max-sm:flex max-sm:justify-center gap-2 w-full mt-6 mb-2 h-20">
-            <img onClick={() => navigate("/home")}
+            <img
+              onClick={() => navigate("/home")}
               src={assets.logo}
               alt=""
               className="w-10 h-8 sm:hidden rounded cursor-pointer"
             />
-            <img src={assets.logoMain} alt="" onClick={() => navigate("/home")} className="max-sm:hidden pl-11 cursor-pointer w-40 h-20"/>
+            <img
+              src={assets.logoMain}
+              alt=""
+              onClick={() => navigate("/home")}
+              className="max-sm:hidden pl-11 cursor-pointer w-40 h-20"
+            />
           </div>
 
           {/* Home Div */}
@@ -201,7 +207,9 @@ const Sidebar = () => {
           >
             <img
               src={
-                activeNavLink === "upload-post" ? assets.createFilled : assets.create
+                activeNavLink === "upload-post"
+                  ? assets.createFilled
+                  : assets.create
               }
               alt=""
               className="w-6 h-6"
@@ -210,11 +218,19 @@ const Sidebar = () => {
           </div>
 
           {/* Profile Div */}
-          <div className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${
+          <div
+            className={`flex items-center p-3 gap-2 w-full hover:bg-[#2e2d2d] rounded cursor-pointer ${
               activeNavLink === "profile"
                 ? "text-[#32CD32] font-semibold"
-                : "text-white"}`} onClick={() => handleProfileClick(userData?.username)}>
-            <img src={userData?.profileImage || assets.defaultprofile} alt="Profile" className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7"/>
+                : "text-white"
+            }`}
+            onClick={() => handleProfileClick(userData?.username)}
+          >
+            <img
+              src={userData?.profileImage || assets.defaultprofile}
+              alt="Profile"
+              className="w-8 h-8 rounded-full object-cover max-sm:w-7 max-sm:h-7"
+            />
             <p className="max-sm:hidden">{userData?.username}</p>
           </div>
 

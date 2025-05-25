@@ -19,7 +19,7 @@ const Comment = ({ isModal = true }) => {
     isLoading,
     setSelectedPost,
   } = useContext(AppContext);
-  const [postDetails, setPostDetails] = useState(selectedPost || null); 
+  const [postDetails, setPostDetails] = useState(selectedPost || null);
   const [commentText, setCommentText] = useState("");
   const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ const Comment = ({ isModal = true }) => {
   };
 
   if (isLoading) {
-    return <Loading/>
+    return <Loading />;
   }
 
   if (!postDetails) {

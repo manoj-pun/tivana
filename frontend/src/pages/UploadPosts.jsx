@@ -6,8 +6,9 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const UploadPosts = () => {
-  const { backendUrl, setIsLoading,userData,getPostData } = useContext(AppContext);
-  const navigate = useNavigate()
+  const { backendUrl, setIsLoading, userData, getPostData } =
+    useContext(AppContext);
+  const navigate = useNavigate();
 
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
@@ -92,88 +93,90 @@ const UploadPosts = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Track if there are any validation errors
-  let hasErrors = false;
+    // Track if there are any validation errors
+    let hasErrors = false;
 
-  // Validate thumbnail (optional, uncomment if required)
-  // if (!thumbnailFile) {
-  //   toast.error("Please upload a thumbnail image.");
-  //   hasErrors = true;
-  // }
+    // Validate thumbnail (optional, uncomment if required)
+    // if (!thumbnailFile) {
+    //   toast.error("Please upload a thumbnail image.");
+    //   hasErrors = true;
+    // }
 
-  // Validate description (optional, uncomment if required)
-  // if (!description.trim()) {
-  //   toast.error("Description is required.");
-  //   hasErrors = true;
-  // }
+    // Validate description (optional, uncomment if required)
+    // if (!description.trim()) {
+    //   toast.error("Description is required.");
+    //   hasErrors = true;
+    // }
 
-  // Validate dropdowns
-  if (dropdowns.length > 0) {
-    for (const [index, dropdown] of dropdowns.entries()) {
-      if (!dropdown.title.trim()) {
-        toast.error(`Title missing for Dropdown ${index + 1}`);
-        hasErrors = true;
-      }
-      if (dropdown.dropdownImageFiles.length === 0) {
-        toast.error(`At least one image is required for Dropdown ${index + 1}`);
-        hasErrors = true;
-      }
-      if (!dropdown.description.trim()) {
-        toast.error(`Description is required for Dropdown ${index + 1}`);
-        hasErrors = true;
+    // Validate dropdowns
+    if (dropdowns.length > 0) {
+      for (const [index, dropdown] of dropdowns.entries()) {
+        if (!dropdown.title.trim()) {
+          toast.error(`Title missing for Dropdown ${index + 1}`);
+          hasErrors = true;
+        }
+        if (dropdown.dropdownImageFiles.length === 0) {
+          toast.error(
+            `At least one image is required for Dropdown ${index + 1}`
+          );
+          hasErrors = true;
+        }
+        if (!dropdown.description.trim()) {
+          toast.error(`Description is required for Dropdown ${index + 1}`);
+          hasErrors = true;
+        }
       }
     }
-  }
 
-  // Prevent submission if there are any errors
-  if (hasErrors) {
-    return; // Stop the function here if there are errors
-  }
+    // Prevent submission if there are any errors
+    if (hasErrors) {
+      return; // Stop the function here if there are errors
+    }
 
-  try {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("description", description);
-    formData.append("thumbnailImage", thumbnailFile);
+      const formData = new FormData();
+      formData.append("description", description);
+      formData.append("thumbnailImage", thumbnailFile);
 
-    const dropdownData = dropdowns.map((dropdown) => ({
-      title: dropdown.title,
-      subtitle: dropdown.subtitle,
-      description: dropdown.description,
-      imageCount: dropdown.dropdownImageFiles.length,
-    }));
+      const dropdownData = dropdowns.map((dropdown) => ({
+        title: dropdown.title,
+        subtitle: dropdown.subtitle,
+        description: dropdown.description,
+        imageCount: dropdown.dropdownImageFiles.length,
+      }));
 
-    formData.append("dropdown", JSON.stringify(dropdownData));
+      formData.append("dropdown", JSON.stringify(dropdownData));
 
-    dropdowns.forEach((dropdown) => {
-      dropdown.dropdownImageFiles.forEach((file) => {
-        formData.append("dropdownImages", file);
+      dropdowns.forEach((dropdown) => {
+        dropdown.dropdownImageFiles.forEach((file) => {
+          formData.append("dropdownImages", file);
+        });
       });
-    });
 
-    const { data } = await axios.post(
-      backendUrl + "/api/posts/upload-post",
-      formData
-    );
+      const { data } = await axios.post(
+        backendUrl + "/api/posts/upload-post",
+        formData
+      );
 
-    await getPostData();
-    
-    toast.success(data.message);
+      await getPostData();
 
-    navigate(`/${userData.username}`);
-  } catch (error) {
-    if (error.response?.data?.message) {
-      toast.error(error.response.data.message);
-    } else {
-      toast.error(error.message || "Failed to upload post");
+      toast.success(data.message);
+
+      navigate(`/${userData.username}`);
+    } catch (error) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message || "Failed to upload post");
+      }
+    } finally {
+      setIsLoading(false);
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <div className="flex items-center justify-center p-10 gap-2">
@@ -186,17 +189,29 @@ const UploadPosts = () => {
           {/* Primary Image Upload */}
           <div className="mb-4">
             <p className="font-medium mb-2 text-white">Upload Image</p>
-            <label htmlFor="file-input"
+            <label
+              htmlFor="file-input"
               className="block rounded-lg cursor-pointer text-center border-2 border-pink-400 hover:border-[#32CD32] transition duration-200 p-2 bg-black"
             >
-              <img src={thumbnail || assets.uploadArea} alt="Upload" className="mx-auto object-contain rounded-md"/>
-              <input type="file" accept="image/*" id="file-input" onChange={handleThumbnailChange} className="hidden"/>
+              <img
+                src={thumbnail || assets.uploadArea}
+                alt="Upload"
+                className="mx-auto object-contain rounded-md"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                id="file-input"
+                onChange={handleThumbnailChange}
+                className="hidden"
+              />
             </label>
           </div>
 
           {/* Description */}
           <div className="mb-4">
-            <textarea className="w-full p-2 border-2 border-pink-400 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 hover:border-[#32CD32] transition duration-200 bg-black text-white mb-4"
+            <textarea
+              className="w-full p-2 border-2 border-pink-400 outline-none rounded-lg resize-y overflow-auto placeholder-gray-500 hover:border-[#32CD32] transition duration-200 bg-black text-white mb-4"
               placeholder="Description..."
               rows={3}
               value={description}

@@ -20,7 +20,7 @@ const HomeCard = () => {
     savePost,
     unsavePost,
     setSelectedPost,
-    addComment, 
+    addComment,
   } = useContext(AppContext);
 
   const navigate = useNavigate();
@@ -92,7 +92,13 @@ const HomeCard = () => {
                   {post.userId.username}
                 </span>
                 <span className="-ml-1.5">
-                  {post.userId.isVerified && <img src={assets.verified} alt="Verified" className="w-4 h-4" />}
+                  {post.userId.isVerified && (
+                    <img
+                      src={assets.verified}
+                      alt="Verified"
+                      className="w-4 h-4"
+                    />
+                  )}
                 </span>
                 <span>·</span>
                 <span className="text-[#808080]">{format(post.createdAt)}</span>
@@ -101,7 +107,11 @@ const HomeCard = () => {
 
             {/* Thumbnail */}
             <div>
-              <img src={post.thumbnail} alt="post" className="w-full rounded-lg" />
+              <img
+                src={post.thumbnail}
+                alt="post"
+                className="w-full rounded-lg"
+              />
             </div>
 
             {/* Icons */}
@@ -110,7 +120,9 @@ const HomeCard = () => {
                 <img
                   src={isLiked ? assets.heartFilled : assets.heart}
                   className="w-6 h-6 cursor-pointer"
-                  onClick={() => (isLiked ? unlikePost(post._id) : likePost(post._id))}
+                  onClick={() =>
+                    isLiked ? unlikePost(post._id) : likePost(post._id)
+                  }
                   alt={isLiked ? "Unlike" : "Like"}
                 />
                 <img
@@ -134,19 +146,25 @@ const HomeCard = () => {
                 src={isSaved ? assets.saveFilled : assets.save}
                 alt={isSaved ? "Unsave" : "Save"}
                 className="w-6 h-6 cursor-pointer"
-                onClick={() => (isSaved ? unsavePost(post._id) : savePost(post._id))}
+                onClick={() =>
+                  isSaved ? unsavePost(post._id) : savePost(post._id)
+                }
               />
             </div>
 
             {/* Like/Save Counts */}
             <div className="text-sm text-white mb-2">
-              <p className="font-semibold">{post.likeCount || post.likedBy.length} likes</p>
+              <p className="font-semibold">
+                {post.likeCount || post.likedBy.length} likes
+              </p>
             </div>
 
             {/* Info + Inline Toggle */}
             <div className="flex gap-2 mb-2 text-sm leading-snug">
               <p>
-                <span className="font-bold text-white">{post.userId.username}</span>{" "}
+                <span className="font-bold text-white">
+                  {post.userId.username}
+                </span>{" "}
                 <span className="text-white">{post.description} </span>
                 {post.dropdowns && post.dropdowns.length > 0 && (
                   <span
@@ -160,10 +178,16 @@ const HomeCard = () => {
             </div>
 
             {/* Dropdown */}
-            <div className={`dropdown-content ${showDropdownMap[post._id] ? "open" : ""}`}>
-              {showDropdownMap[post._id] && post.dropdowns && post.dropdowns.length > 0 && (
-                <Dropdown dropdowns={post.dropdowns} />
-              )}
+            <div
+              className={`dropdown-content ${
+                showDropdownMap[post._id] ? "open" : ""
+              }`}
+            >
+              {showDropdownMap[post._id] &&
+                post.dropdowns &&
+                post.dropdowns.length > 0 && (
+                  <Dropdown dropdowns={post.dropdowns} />
+                )}
             </div>
 
             {/* Comment Input */}

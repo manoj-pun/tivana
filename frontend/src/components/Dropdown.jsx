@@ -20,16 +20,16 @@ const Dropdown = ({ dropdowns }) => {
   };
 
   const nextImage = (index, imagesLength) => {
-    setCurrentImageIndices(prev => ({
+    setCurrentImageIndices((prev) => ({
       ...prev,
-      [index]: Math.min(prev[index] + 1, imagesLength - 1)
+      [index]: Math.min(prev[index] + 1, imagesLength - 1),
     }));
   };
 
   const prevImage = (index) => {
-    setCurrentImageIndices(prev => ({
+    setCurrentImageIndices((prev) => ({
       ...prev,
-      [index]: Math.max(prev[index] - 1, 0)
+      [index]: Math.max(prev[index] - 1, 0),
     }));
   };
 
@@ -37,7 +37,7 @@ const Dropdown = ({ dropdowns }) => {
     if (openDropdown !== null && dropdownRefs.current[openDropdown]) {
       dropdownRefs.current[openDropdown].scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "start",
       });
     }
   }, [openDropdown]);
@@ -45,15 +45,25 @@ const Dropdown = ({ dropdowns }) => {
   return (
     <div className="p-2 mt-2 relative z-0 max-h-[510px] overflow-y-auto transition-all duration-300 ease-in-out rounded-lg">
       {dropdowns.map((item, index) => (
-        <div key={item._id} className="mb-4" ref={el => (dropdownRefs.current[index] = el)}>
+        <div
+          key={item._id}
+          className="mb-4"
+          ref={(el) => (dropdownRefs.current[index] = el)}
+        >
           {/* Dropdown Header */}
-          <div className="flex items-center justify-between bg-[#333333] p-2 cursor-pointer rounded-md"
-            onClick={() => toggleDropdown(index)}>
+          <div
+            className="flex items-center justify-between bg-[#333333] p-2 cursor-pointer rounded-md"
+            onClick={() => toggleDropdown(index)}
+          >
             <div>
               <h1 className="font-semibold text-white">{item.title}</h1>
               <p className="text-sm text-gray-400">{item.subTitle}</p>
             </div>
-            <img src={openDropdown === index ? assets.upArrow : assets.downArrow} className="w-5 h-5" alt="Toggle"/>
+            <img
+              src={openDropdown === index ? assets.upArrow : assets.downArrow}
+              className="w-5 h-5"
+              alt="Toggle"
+            />
           </div>
 
           {/* Dropdown Content */}
@@ -62,10 +72,21 @@ const Dropdown = ({ dropdowns }) => {
               {/* Image Slider */}
               {item.images && item.images.length > 0 && (
                 <div className="relative w-full mx-auto overflow-hidden">
-                  <div className="relative flex transition-transform duration-700 ease-in-out"
-                    style={{ transform: `translateX(-${currentImageIndices[index] * 100}%)`,}}>
+                  <div
+                    className="relative flex transition-transform duration-700 ease-in-out"
+                    style={{
+                      transform: `translateX(-${
+                        currentImageIndices[index] * 100
+                      }%)`,
+                    }}
+                  >
                     {item.images.map((img, imgIndex) => (
-                      <img key={img._id} src={img.url} className="w-full h-[250px] object-contain rounded-lg flex-shrink-0" alt="Dropdown"/>
+                      <img
+                        key={img._id}
+                        src={img.url}
+                        className="w-full h-[250px] object-contain rounded-lg flex-shrink-0"
+                        alt="Dropdown"
+                      />
                     ))}
                   </div>
 
@@ -73,13 +94,27 @@ const Dropdown = ({ dropdowns }) => {
                   {item.images.length > 1 && (
                     <>
                       {currentImageIndices[index] > 0 && (
-                        <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-1 rounded-full z-10 cursor-pointer" onClick={() => prevImage(index)}>
-                          <img src={assets.leftArrow} alt="Prev" className="w-4 h-4"/>
+                        <button
+                          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-1 rounded-full z-10 cursor-pointer"
+                          onClick={() => prevImage(index)}
+                        >
+                          <img
+                            src={assets.leftArrow}
+                            alt="Prev"
+                            className="w-4 h-4"
+                          />
                         </button>
                       )}
                       {currentImageIndices[index] < item.images.length - 1 && (
-                        <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-1 rounded-full z-10 cursor-pointer" onClick={() => nextImage(index, item.images.length)}>
-                          <img src={assets.rightArrow} alt="Next" className="w-4 h-4"/>
+                        <button
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-1 rounded-full z-10 cursor-pointer"
+                          onClick={() => nextImage(index, item.images.length)}
+                        >
+                          <img
+                            src={assets.rightArrow}
+                            alt="Next"
+                            className="w-4 h-4"
+                          />
                         </button>
                       )}
                     </>
@@ -88,11 +123,19 @@ const Dropdown = ({ dropdowns }) => {
                   {/* Image Indicators */}
                   <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
                     {item.images.map((_, idx) => (
-                      <div key={idx} className={`w-2 h-2 rounded-full cursor-pointer ${currentImageIndices[index] === idx
+                      <div
+                        key={idx}
+                        className={`w-2 h-2 rounded-full cursor-pointer ${
+                          currentImageIndices[index] === idx
                             ? "bg-white"
                             : "bg-gray-500"
                         }`}
-                        onClick={() => setCurrentImageIndices(prev => ({...prev,[index]: idx}))}
+                        onClick={() =>
+                          setCurrentImageIndices((prev) => ({
+                            ...prev,
+                            [index]: idx,
+                          }))
+                        }
                       />
                     ))}
                   </div>

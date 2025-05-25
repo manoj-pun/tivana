@@ -5,7 +5,13 @@ import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
 
 const UploadProfilePicture = () => {
-  const { setShowUploadProfilePicture, backendUrl,userData, setUserData, setIsLoading } = useContext(AppContext);
+  const {
+    setShowUploadProfilePicture,
+    backendUrl,
+    userData,
+    setUserData,
+    setIsLoading,
+  } = useContext(AppContext);
 
   //checking if the profileImage is empty or not
   const isDefaultImage = !userData.profileImage;
@@ -72,8 +78,17 @@ const UploadProfilePicture = () => {
         <hr className="text-gray-300" />
 
         <div className="relative cursor-pointer">
-          <input type="file" id="file-upload" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleFileChange}/>
-          <label htmlFor="file-upload" className="flex flex-col items-center justify-center">
+          <input
+            type="file"
+            id="file-upload"
+            accept="image/*"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            onChange={handleFileChange}
+          />
+          <label
+            htmlFor="file-upload"
+            className="flex flex-col items-center justify-center"
+          >
             <h1 className="text-[#32CD32] font-semibold">Upload Photo</h1>
           </label>
         </div>
@@ -83,13 +98,19 @@ const UploadProfilePicture = () => {
         {!isDefaultImage && (
           <>
             <div className="cursor-pointer" onClick={removeProfileImage}>
-              <h1 className="text-red-600 font-semibold"> Remove Current Photo</h1>
+              <h1 className="text-red-600 font-semibold">
+                {" "}
+                Remove Current Photo
+              </h1>
             </div>
             <hr className="text-gray-300" />
           </>
         )}
 
-        <p onClick={() => setShowUploadProfilePicture(false)} className="mb-3 text-white cursor-pointer">
+        <p
+          onClick={() => setShowUploadProfilePicture(false)}
+          className="mb-3 text-white cursor-pointer"
+        >
           Cancel
         </p>
       </div>

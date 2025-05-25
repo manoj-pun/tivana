@@ -28,8 +28,8 @@ const UserSavedPosts = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Get all saved posts from postData
@@ -45,7 +45,8 @@ const UserSavedPosts = () => {
   // Set post details when selectedPost changes
   useEffect(() => {
     if (selectedPost && postData) {
-      const foundPost = postData.find((post) => post._id === selectedPost._id) || selectedPost;
+      const foundPost =
+        postData.find((post) => post._id === selectedPost._id) || selectedPost;
       setPostDetails(foundPost);
     }
   }, [selectedPost, postData]);
@@ -64,7 +65,8 @@ const UserSavedPosts = () => {
 
   const isLiked = userData?.likedPosts?.includes(postDetails._id) || false;
   const isSaved = userData?.savedPosts?.includes(postDetails._id) || false;
-  const userProfileImage = postDetails.userId?.profileImage || assets.defaultprofile;
+  const userProfileImage =
+    postDetails.userId?.profileImage || assets.defaultprofile;
   const username = postDetails.userId?.username || "Unknown User";
 
   return (
@@ -73,11 +75,13 @@ const UserSavedPosts = () => {
       role="dialog"
       aria-labelledby="saved-post-modal-title"
     >
-      <div
-        className="bg-[#1a1a1a] rounded-lg w-full h-full md:w-full md:max-w-5xl md:h-[85vh] md:max-h-[85vh] flex flex-col md:flex-row"
-      >
+      <div className="bg-[#1a1a1a] rounded-lg w-full h-full md:w-full md:max-w-5xl md:h-[85vh] md:max-h-[85vh] flex flex-col md:flex-row">
         {/* Left: Image Section */}
-        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex items-center justify-center overflow-hidden bg-black border border-[#262626]`}>
+        <div
+          className={`${
+            isMobile ? "h-1/2" : "w-1/2 h-full"
+          } flex items-center justify-center overflow-hidden bg-black border border-[#262626]`}
+        >
           <img
             src={postDetails.thumbnail || assets.pokhara}
             alt="Saved Post"
@@ -86,7 +90,7 @@ const UserSavedPosts = () => {
         </div>
 
         {/* Right: Content Area */}
-        <div className={`${isMobile ? 'h-1/2' : 'w-1/2 h-full'} flex flex-col`}>
+        <div className={`${isMobile ? "h-1/2" : "w-1/2 h-full"} flex flex-col`}>
           {/* Tab Buttons */}
           <div className="flex border-b border-gray-700 bg-[#1a1a1a] z-10">
             <button
@@ -117,7 +121,9 @@ const UserSavedPosts = () => {
           <div className="flex-1 overflow-hidden">
             {/* Comments Section */}
             <div
-              className={`h-full ${activeTab === "comments" ? "block" : "hidden"}`}
+              className={`h-full ${
+                activeTab === "comments" ? "block" : "hidden"
+              }`}
             >
               <div className="h-full overflow-y-auto">
                 <Comment isModal={false} />
@@ -154,7 +160,11 @@ const UserSavedPosts = () => {
         </div>
 
         {/* Close button */}
-        <div className={`absolute ${isMobile ? 'top-2 right-2' : 'top-13 right-42'}`}>
+        <div
+          className={`absolute ${
+            isMobile ? "top-2 right-2" : "top-13 right-42"
+          }`}
+        >
           <img
             src={assets.cross_icon}
             alt="Close"

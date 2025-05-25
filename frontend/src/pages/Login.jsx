@@ -1,41 +1,44 @@
-import React, { useContext, useState } from 'react';
-import { assets } from '../assets/assets';
-import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useContext, useState } from "react";
+import { assets } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
   const { backendUrl, setIsLoggedIn, getUserData } = useContext(AppContext);
-  const [state, setState] = useState('Login');
-  const [username, setUsername] = useState('');
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [state, setState] = useState("Login");
+  const [username, setUsername] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
       axios.defaults.withCredentials = true;
 
-      if (state === 'Sign Up') {
-        const { data } = await axios.post(backendUrl + '/api/auth/register-user', {
-          username,
-          fullname,
-          email,
-          password,
-        });
+      if (state === "Sign Up") {
+        const { data } = await axios.post(
+          backendUrl + "/api/auth/register-user",
+          {
+            username,
+            fullname,
+            email,
+            password,
+          }
+        );
 
         if (data.success) {
           setIsLoggedIn(true);
           getUserData();
-          navigate('/home');
+          navigate("/home");
         } else {
           toast.error(data.message);
         }
       } else {
-        const { data } = await axios.post(backendUrl + '/api/auth/login-user', {
+        const { data } = await axios.post(backendUrl + "/api/auth/login-user", {
           email,
           password,
         });
@@ -43,7 +46,7 @@ const Login = () => {
         if (data.success) {
           setIsLoggedIn(true);
           getUserData();
-          navigate('/home');
+          navigate("/home");
         } else {
           toast.error(data.message);
         }
@@ -56,13 +59,21 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black px-4 sm:px-6 lg:px-8">
       {/* Logo */}
-      <div className={`absolute top-8 left-8 sm:left-16 flex items-center gap-3 group ${state === 'Sign Up' ? 'max-sm:hidden' : ''}`}>
+      <div
+        className={`absolute top-8 left-8 sm:left-16 flex items-center gap-3 group ${
+          state === "Sign Up" ? "max-sm:hidden" : ""
+        }`}
+      >
         <img
           src={assets.logo}
           alt="Tivana Logo"
           className="w-10 h-10 rounded cursor-pointer transition-all duration-300 group-hover:scale-110"
         />
-        <img src={assets.logoMain} alt="" className="hidden sm:block cursor-pointer w-24 h-20"/>
+        <img
+          src={assets.logoMain}
+          alt=""
+          className="hidden sm:block cursor-pointer w-24 h-20"
+        />
       </div>
 
       {/* Image Side */}
@@ -78,15 +89,17 @@ const Login = () => {
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 sm:p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-700 backdrop-blur-sm">
         <div className="text-center mb-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight">
-            {state === 'Sign Up' ? 'Create Account' : 'Welcome Back'}
+            {state === "Sign Up" ? "Create Account" : "Welcome Back"}
           </h2>
           <p className="text-gray-400 text-sm">
-            {state === 'Sign Up' ? 'Join our community today' : 'Login to continue your journey'}
+            {state === "Sign Up"
+              ? "Join our community today"
+              : "Login to continue your journey"}
           </p>
         </div>
 
         <form onSubmit={onSubmitHandler} className="space-y-6">
-          {state === 'Sign Up' && (
+          {state === "Sign Up" && (
             <>
               <div className="relative">
                 <input
@@ -130,16 +143,16 @@ const Login = () => {
             type="submit"
             className="w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white font-medium cursor-pointer hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-green-500/30"
           >
-            {state === 'Sign Up' ? 'Create Account' : 'Login'}
+            {state === "Sign Up" ? "Create Account" : "Login"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          {state === 'Sign Up' ? (
+          {state === "Sign Up" ? (
             <p className="text-gray-400 text-sm">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <span
-                onClick={() => setState('Login')}
+                onClick={() => setState("Login")}
                 className="text-green-400 cursor-pointer hover:text-green-300 underline transition-colors"
               >
                 Login here
@@ -147,9 +160,9 @@ const Login = () => {
             </p>
           ) : (
             <p className="text-gray-400 text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <span
-                onClick={() => setState('Sign Up')}
+                onClick={() => setState("Sign Up")}
                 className="text-green-400 cursor-pointer hover:text-green-300 underline transition-colors"
               >
                 Sign up

@@ -1,45 +1,54 @@
-import React, { useContext } from 'react'
-import { AppContext } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { assets } from '../assets/assets';
+import React, { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { assets } from "../assets/assets";
 
 const Menu = () => {
-
   const navigate = useNavigate();
 
-  const {backendUrl,setUserData,setIsLoggedIn,setShowMenu} = useContext(AppContext)
+  const { backendUrl, setUserData, setIsLoggedIn, setShowMenu } =
+    useContext(AppContext);
 
   const logout = async () => {
-  try {
-    axios.defaults.withCredentials = true;
+    try {
+      axios.defaults.withCredentials = true;
 
-    // Clear recent searches in localStorage
-    localStorage.removeItem('recentSearches');
+      // Clear recent searches in localStorage
+      localStorage.removeItem("recentSearches");
 
-    // Perform logout
-    const { data } = await axios.post(`${backendUrl}/api/auth/logout-user`);
+      // Perform logout
+      const { data } = await axios.post(`${backendUrl}/api/auth/logout-user`);
 
-    if (data.success) {
-      setIsLoggedIn(false);
-      setUserData(null);
-      setShowMenu(false);
-      navigate('/');
-      toast.success('Logged Out');
+      if (data.success) {
+        setIsLoggedIn(false);
+        setUserData(null);
+        setShowMenu(false);
+        navigate("/");
+        toast.success("Logged Out");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to log out");
     }
-  } catch (error) {
-    toast.error(error.response?.data?.message || 'Failed to log out');
-  }
-};
+  };
 
   return (
-    <div className='flex text-white fixed left-0 right-0 bottom-23'>
-      <span onClick={logout} className='max-sm:hidden px-3 bg-[#393939] py-3 w-[230px] h-[50px] rounded ml-2.5 cursor-pointer'>Logout</span>
+    <div className="flex text-white fixed left-0 right-0 bottom-23">
+      <span
+        onClick={logout}
+        className="max-sm:hidden px-3 bg-[#393939] py-3 w-[230px] h-[50px] rounded ml-2.5 cursor-pointer"
+      >
+        Logout
+      </span>
 
-      <img onClick={logout} src={assets.logout} className='w-10 h-10 sm:hidden bg-[#393939] p-2 fixed left-4 bottom-23 cursor-pointer rounded'/>
+      <img
+        onClick={logout}
+        src={assets.logout}
+        className="w-10 h-10 sm:hidden bg-[#393939] p-2 fixed left-4 bottom-23 cursor-pointer rounded"
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;
