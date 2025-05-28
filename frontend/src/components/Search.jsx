@@ -92,7 +92,7 @@ const Search = () => {
   };
 
   return (
-    <div className="w-90 max-sm:w-80 min-h-screen fixed top-0 bottom-0 border-r-[#262626] border-r-1 rounded-r-2xl bg-black">
+    <div className="w-90 max-sm:w-80 min-h-screen fixed top-0 bottom-0 border-r-[#262626] border-r-1 rounded-r-2xl bg-black z-10">
       <div className="pt-8 p-3">
         <div className="flex items-center justify-between">
           <h1 className="text-white text-[25px] font-semibold mb-4">Search</h1>
