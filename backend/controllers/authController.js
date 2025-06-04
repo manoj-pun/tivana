@@ -56,7 +56,7 @@ export const registerUser = async (req, res) => {
       // sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       // maxAge: 7 * 24 * 60 * 60 * 1000
       secure:true,
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -97,7 +97,7 @@ export const loginUser = async (req, res) => {
       // sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       // maxAge: 7 * 24 * 60 * 60 * 1000
       secure:true,
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -115,7 +115,7 @@ export const logoutUser = async (req, res) => {
       // sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       // maxAge: 7 * 24 * 60 * 60 * 1000
       secure:true,
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
