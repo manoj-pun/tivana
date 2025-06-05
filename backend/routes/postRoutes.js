@@ -5,12 +5,12 @@ import { deletePost, getAllPosts, getPostById, uploadPost } from "../controllers
 
 const router = express.Router()
 
-router.post("/upload-post",upload.fields([
+router.post("/upload-post",userAuth,upload.fields([
     { name: "thumbnailImage", maxCount: 1 },
     { name: "dropdownImages", maxCount: 100 }
   ]),uploadPost);
-router.get("/get-all-posts",getAllPosts)
-router.get("/:id",getPostById)
-router.delete("/:id",deletePost)
+router.get("/get-all-posts",userAuth,getAllPosts)
+router.get("/:id",userAuth,getPostById)
+router.delete("/:id",userAuth,deletePost)
 
 export default router
