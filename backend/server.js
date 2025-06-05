@@ -22,10 +22,7 @@ const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(cookieParser());
 app.use(express.json())
-app.use(cors({
-  origin: 'http://localhost:3000', 
-    origin: 'https://tivana.vercel.app',
-}));
+app.use(cors({origin:allowedOrigins, credentials:true}))
 
 app.get("/",(req,res) => {
     res.send("Hello ")
