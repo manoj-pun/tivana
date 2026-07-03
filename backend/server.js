@@ -21,8 +21,6 @@ const allowedOrigins = (process.env.FRONTEND_URL || "")
   .map(url => url.trim().replace(/\/$/, ""))
   .filter(Boolean)
 
-console.log("Allowed origins:", allowedOrigins) // remove once confirmed working
-
 app.use(cookieParser())
 app.use(express.json())
 
@@ -40,7 +38,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }))
 
-app.options("*", cors()) // explicitly handle preflight for all routes
+app.options(/.*/, cors())
 
 app.get("/", (req, res) => {
   res.send("Hello ")
